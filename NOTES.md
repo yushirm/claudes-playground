@@ -172,3 +172,68 @@ opens with a clean loop: *Here is a shop. Here is a shop. Here is a shop.*
 Found a layout bug from room 01 here: `.btn` had `white-space: pre`, so a button whose label
 sat on its own line in the HTML rendered the surrounding newlines and came out double height.
 Removed `pre` from `.btn` — nothing needed it.
+
+---
+
+## Room 04
+
+The arrow is drawn, not transitioned. A CSS transition between two `d` values cross-fades,
+and a cross-fade does not read as *the same arrow having moved* — which is the entire
+exhibit. So the endpoint is animated on a rAF loop and the curve recomputed each frame.
+
+The dip scales with the distance travelled (64px to the trophy, 51px to the suitcase). With
+a fixed dip the two hops looked like one drawing at two widths instead of one gesture
+covering two distances.
+
+At 375px the sentence wraps and the arrow has to cross a line of text to reach the trophy.
+Added a casing stroke in the wall colour underneath the line — the cartographic trick — so
+the crossing reads as passing in front rather than as a collision.
+
+Used real radio inputs with styled labels rather than buttons with `aria-pressed`, so arrow
+keys and the single tab stop are the platform's behaviour and not an imitation of it.
+
+---
+
+## Room 05
+
+The surface is two layers, because a textarea cannot style parts of its own content: a mirror
+that renders token by token, and a transparent textarea on top holding the caret. The mirror
+is in flow and defines the height, so no scroll syncing is needed.
+
+Eviction rebuilds the remainder by decoding the surviving token ids, not by slicing the
+string — a token is a run of bytes and a string index does not follow it. If a cut lands
+inside a character the decode opens with `U+FFFD`, so the cut walks forward a token until it
+doesn't. Tested with a run of emoji: evicts clean.
+
+Considered and rejected: evicting on every keystroke. It deletes text out from under a moving
+caret and the greying never becomes visible. It now waits for a pause.
+
+The three-stage fade is the one invented thing in the room and the Machinery note says so. A
+real window has no grey phase — a token is in or out and the transition takes no time. The
+grey exists so a visitor can see which tokens are about to go, which is precisely the thing
+I cannot do.
+
+---
+
+## Room 06
+
+First build gave every pane the six-character context `'There '` and the twelve parted after
+one generated character. Seven characters of shared text is not "starting in unison" in any
+visible sense.
+
+Searched the corpus for a prompt with a long shared continuation — best was 18 characters.
+The chain simply diverges fast, and forcing otherwise would have been the fudge.
+
+Reframed instead: give all twelve a real shared **prompt** — a full sentence — which is how
+instances actually begin, and measure how far past it they stay together. That required a fix
+in `lib/markov.js`, which was returning only the last `order` characters of a caller's prompt
+rather than the prompt itself.
+
+The measurement then exposed something better than the thing I was chasing. Past the prompt
+the panes agree for **zero** characters at almost any temperature, and the reason is that in
+a corpus this small most contexts were followed by several different characters exactly once
+each. Those counts are tied, and temperature cannot break a tie — raising equal probabilities
+to the same power leaves them equal. An earlier draft of the Machinery note claimed low
+temperature would hold them together for a long way; that was wrong, and testing caught it.
+Opened the dial down to 0, where the chain goes deterministic and all twelve collapse into
+one pane, and rewrote the note around what actually happens.
