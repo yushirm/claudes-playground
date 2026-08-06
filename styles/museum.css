@@ -1,0 +1,856 @@
+/* ==========================================================================
+   Seams — one stylesheet for the whole building.
+
+   The visual world here is the token grid: discrete cells, visible boundaries,
+   gutters, alternating fills that mark segmentation. Museums bring the other
+   half — wall text, room numbers, a floor plan, generous emptiness.
+
+   One rule holds the rest together: there are no hairline rules in this
+   building. Not under headers, not between sections, not around the floor
+   plan. Separation is done with the grid itself — cells, gutters, fills — and
+   with space. A rule under a heading would turn this into a broadsheet, and
+   the moment it looks like a broadsheet it stops looking like what it is.
+   ========================================================================== */
+
+/* --- fonts ---------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/instrument-serif-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/instrument-serif-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/instrument-serif-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/instrument-serif-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../assets/fonts/newsreader-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url('../assets/fonts/newsreader-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/plex-mono-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- the palette ---------------------------------------------------------- */
+
+:root {
+  /* The wall is a cold gallery grey-green. Nothing in this building is warm. */
+  --ground: #e4e7e4;
+  --ink: #16181a;
+  --muted: #6e7570;
+
+  /* Machine surfaces. Paper sits up off the wall, recess sits down into it —
+     an input needs to read as an aperture, not as a rectangle floating free.
+     Paper has to clear the ground by enough to be seen; at two steps it looked
+     like a rendering error rather than a surface. */
+  --paper: #f1f3f0;
+  --recess: #d3d8d4;
+
+  /* Alternating token fills. Near-identical in lightness on purpose, so that
+     alternation reads as segmentation and never as emphasis. */
+  --token-a: #c9d4ee;
+  --token-b: #c6e0d2;
+
+  /* Live state only. Never decoration, never a border, never a heading. */
+  --marker: #3b2fd9;
+  --marker-wash: rgba(59, 47, 217, 0.1);
+  --marker-wash-strong: rgba(59, 47, 217, 0.18);
+
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-text: 'Newsreader', Georgia, 'Times New Roman', serif;
+  /* The CJK fallbacks matter: the self-hosted subsets are Latin only, and
+     room 01 deliberately shows a non-Latin example. */
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas,
+    'Noto Sans Mono CJK JP', 'Noto Sans CJK JP', 'Hiragino Sans', 'Yu Gothic',
+    Meiryo, monospace;
+
+  --gutter: 2px;
+  --measure: 34em;
+
+  --dur: 260ms;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 1ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- base ----------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1.1875rem;
+  line-height: 1.65;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--marker);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection {
+  background: var(--marker-wash-strong);
+}
+
+a {
+  color: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  padding: 0.6rem 1rem;
+}
+.skip-link:focus {
+  left: 0.75rem;
+  top: 0.75rem;
+}
+
+/* --- opened from disk ----------------------------------------------------- */
+/* Browsers refuse to load JavaScript modules from a file:// address, and every
+   exhibit in this building is a module. When that happens the building says so
+   rather than standing there quietly broken. */
+
+.disk-notice {
+  display: none;
+}
+
+.from-disk .disk-notice {
+  display: block;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.1rem clamp(1.125rem, 4vw, 3rem);
+  background: var(--marker-wash);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.disk-notice code {
+  background: var(--paper);
+  padding: 0.1em 0.35em;
+}
+
+/* --- page shell ----------------------------------------------------------- */
+
+.page {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 5rem) clamp(1.125rem, 4vw, 3rem) 6rem;
+}
+
+/* --- the token grid ------------------------------------------------------- */
+/* Used by the signage, by room 01, by room 05. One primitive, three sizes. */
+
+.cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+  align-items: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cell {
+  display: inline-block;
+  font-family: var(--font-mono);
+  white-space: pre;
+  background: var(--token-a);
+  color: var(--ink);
+  padding: 0.28em 0.34em;
+  line-height: 1.35;
+}
+
+.cell:nth-child(even) {
+  background: var(--token-b);
+}
+
+/* A cell whose bytes are not valid UTF-8 on their own. It is not text yet. */
+.cell.is-fragment {
+  background: var(--recess);
+  color: var(--muted);
+  font-size: 0.82em;
+  letter-spacing: 0.04em;
+  align-self: center;
+}
+
+.cell.is-live {
+  background: var(--marker);
+  color: var(--ground);
+}
+
+/* --- signage -------------------------------------------------------------- */
+/* The building is made of the material it is about. This is the one place in
+   the museum to spend boldness; everything else stays quiet. */
+
+.sign {
+  margin: 0 0 clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.sign-room {
+  font-family: var(--font-mono);
+  font-size: 0.78125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.1rem;
+}
+
+.sign-title {
+  margin: 0;
+  font-weight: 400;
+}
+
+.sign-title .cells {
+  gap: 3px;
+}
+
+.sign-title .cell {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 7.5vw, 4.25rem);
+  line-height: 1.02;
+  padding: 0.16em 0.13em 0.2em;
+}
+
+/* Before the cells are drawn, the plain title stands in. No layout jump. */
+.sign-title[data-sign]:not(.is-cut) {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 7.5vw, 4.25rem);
+  line-height: 1.1;
+}
+
+/* --- wall text ------------------------------------------------------------ */
+/* Set like a book. Long measure, real leading, no cards, no boxes, no rules. */
+
+.wall-text {
+  max-width: var(--measure);
+  margin: clamp(3rem, 7vw, 5.5rem) 0 0;
+}
+
+.wall-text h2 {
+  font-family: var(--font-mono);
+  font-size: 0.78125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.4rem;
+}
+
+.wall-text p {
+  margin: 0 0 1.15em;
+  text-wrap: pretty;
+}
+
+.wall-text p:last-child {
+  margin-bottom: 0;
+}
+
+.wall-text em {
+  font-style: italic;
+}
+
+.wall-text code,
+.wall-text .tok {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  background: var(--paper);
+  padding: 0.1em 0.32em;
+  white-space: pre;
+}
+
+/* --- machinery ------------------------------------------------------------ */
+/* Not fine print. Part of the exhibit. */
+
+.machinery {
+  margin: clamp(3rem, 7vw, 5rem) 0 0;
+  max-width: var(--measure);
+  background: var(--paper);
+  padding: 1.25rem clamp(1.25rem, 3vw, 2rem);
+}
+
+.machinery > summary {
+  font-family: var(--font-mono);
+  font-size: 0.78125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.machinery > summary::-webkit-details-marker {
+  display: none;
+}
+
+.machinery > summary::after {
+  content: '+';
+  margin-left: auto;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.machinery[open] > summary::after {
+  content: '\2212';
+}
+
+.machinery > summary:hover {
+  color: var(--ink);
+}
+
+.machinery-body {
+  padding-top: 1.4rem;
+  font-size: 0.9375rem;
+  line-height: 1.68;
+  color: #3d423f;
+}
+
+.machinery-body p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+.machinery-body p:last-child {
+  margin-bottom: 0;
+}
+
+.machinery-body code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--recess);
+  padding: 0.1em 0.3em;
+}
+
+/* --- controls ------------------------------------------------------------- */
+
+.label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--ink);
+  background: var(--paper);
+  border: 0;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  white-space: pre;
+  text-align: left;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.btn:hover {
+  background: var(--marker-wash);
+}
+
+.btn[aria-pressed='true'],
+.btn.is-on {
+  background: var(--marker);
+  color: var(--ground);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+}
+
+.field {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--recess);
+  border: 0;
+  padding: 1rem 1.1rem;
+  resize: vertical;
+  display: block;
+}
+
+.field::placeholder {
+  color: var(--muted);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* readouts: a row of value / label pairs, no rules between them */
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 clamp(1.5rem, 4vw, 3rem);
+  margin: 1.25rem 0 0;
+  padding: 0;
+}
+
+.readout div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.3rem;
+}
+
+.readout dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.readout dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.375rem;
+  line-height: 1.1;
+}
+
+.readout dd.is-live {
+  color: var(--marker);
+}
+
+/* --- range: one dial, drawn as a slot in the wall -------------------------- */
+
+.dial {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  margin: 0;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  display: block;
+}
+
+.dial::-webkit-slider-runnable-track {
+  height: 6px;
+  background: var(--recess);
+}
+.dial::-moz-range-track {
+  height: 6px;
+  background: var(--recess);
+  border: 0;
+}
+
+.dial::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 26px;
+  margin-top: -10px;
+  background: var(--marker);
+  border: 0;
+  border-radius: 0;
+}
+.dial::-moz-range-thumb {
+  width: 14px;
+  height: 26px;
+  background: var(--marker);
+  border: 0;
+  border-radius: 0;
+}
+
+.dial:focus-visible {
+  outline-offset: 6px;
+}
+
+.dial-scale {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- floor nav ------------------------------------------------------------ */
+
+.floor-nav {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.125rem, 4vw, 3rem) clamp(3rem, 8vw, 6rem);
+  display: flex;
+  gap: var(--gutter);
+  flex-wrap: wrap;
+}
+
+.floor-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  text-decoration: none;
+  color: var(--muted);
+  background: var(--paper);
+  padding: 0.6rem 0.85rem;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.floor-nav a:hover {
+  background: var(--marker-wash);
+  color: var(--ink);
+}
+
+.floor-nav .to-plan {
+  margin-inline: auto;
+}
+
+/* --- floor plan (home) ---------------------------------------------------- */
+/* A plan drawing. Rooms are filled blocks; the gutters between them are the
+   walls. Nothing here is outlined — an outlined box is a card, and a grid of
+   cards is not a floor plan. */
+
+.museum-head {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(3rem, 9vw, 7rem) clamp(1.125rem, 4vw, 3rem) 0;
+}
+
+.museum-name {
+  margin: 0;
+  font-weight: 400;
+}
+
+.museum-name .cell {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 13vw, 7.5rem);
+  line-height: 1;
+  padding: 0.14em 0.11em 0.18em;
+}
+
+.museum-name .cells {
+  gap: 3px;
+}
+
+.museum-sub {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  max-width: 30rem;
+  margin: 1.75rem 0 0;
+  line-height: 1.7;
+}
+
+/* Poché: in a plan drawing the walls are the solid thing and the rooms are the
+   voids cut out of them. So the grid sits on a darker field and the rooms are
+   light blocks punched into it. The gutters are not gaps between cards — they
+   are the walls, and they are the only reason this reads as a building. */
+.plan-wrap {
+  max-width: 68rem;
+  margin: clamp(3rem, 8vw, 5.5rem) auto 0;
+  padding: 0 clamp(1.125rem, 4vw, 3rem);
+}
+
+.plan {
+  background: var(--recess);
+  padding: 9px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  /* Tall enough that a one-row room still holds its number, its name and its
+     line without clipping — the smallest room is small, not truncated. */
+  grid-auto-rows: minmax(7.25rem, auto);
+  gap: 9px;
+}
+
+.plan-room {
+  background: var(--paper);
+  text-decoration: none;
+  color: var(--ink);
+  padding: 0.85rem 1rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  overflow: hidden;
+  transition: background var(--dur) var(--ease);
+}
+
+.plan-room .plan-no {
+  margin-bottom: auto;
+}
+
+.plan-room:hover,
+.plan-room:focus-visible {
+  background: var(--marker-wash);
+}
+
+.plan-no {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  transition: color var(--dur) var(--ease);
+}
+
+.plan-room:hover .plan-no,
+.plan-room:focus-visible .plan-no {
+  color: var(--marker);
+}
+
+.plan-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.875rem);
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+.plan-gloss {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* The plan itself. Room 04 is one unit, and it is the smallest room here. */
+.plan-room[data-room='01'] { grid-column: 1 / 4; grid-row: 1 / 3; }
+.plan-room[data-room='02'] { grid-column: 4 / 7; grid-row: 1 / 3; }
+.plan-room[data-room='03'] { grid-column: 1 / 3; grid-row: 3 / 4; }
+.plan-room[data-room='04'] { grid-column: 3 / 4; grid-row: 3 / 4; }
+.plan-room[data-room='05'] { grid-column: 4 / 7; grid-row: 3 / 5; }
+.plan-room[data-room='06'] { grid-column: 1 / 4; grid-row: 4 / 5; }
+
+.plan-room[data-room='04'] .plan-title {
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+}
+.plan-room[data-room='04'] .plan-gloss {
+  display: none;
+}
+
+/* Left-aligned to the same margin as the sign and the plan. A centred column
+   under a left-aligned building reads as a different document. */
+.statement {
+  max-width: 68rem;
+  margin: clamp(4rem, 10vw, 7rem) auto 0;
+  padding: 0 clamp(1.125rem, 4vw, 3rem);
+}
+
+.statement-body {
+  max-width: var(--measure);
+}
+
+.statement h2 {
+  font-family: var(--font-mono);
+  font-size: 0.78125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 1.4rem;
+}
+
+.statement p {
+  margin: 0 0 1.15em;
+  text-wrap: pretty;
+}
+
+.colophon {
+  max-width: 68rem;
+  margin: clamp(4rem, 10vw, 7rem) auto 0;
+  padding: 0 clamp(1.125rem, 4vw, 3rem) clamp(3rem, 8vw, 6rem);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+/* --- narrow --------------------------------------------------------------- */
+/* Readable at 375px. The plan becomes a stack of blocks — still blocks, still
+   no rules, still gutters between them. */
+
+@media (max-width: 46rem) {
+  body {
+    font-size: 1.125rem;
+  }
+
+  .plan {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .plan-room {
+    justify-content: flex-start;
+  }
+
+  .plan-room .plan-no {
+    margin-bottom: 0.15rem;
+  }
+
+  .plan-room,
+  .plan-room[data-room='01'],
+  .plan-room[data-room='02'],
+  .plan-room[data-room='03'],
+  .plan-room[data-room='04'],
+  .plan-room[data-room='05'],
+  .plan-room[data-room='06'] {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 6.5rem;
+  }
+
+  .plan-room[data-room='04'] .plan-gloss {
+    display: block;
+  }
+
+  .floor-nav .to-plan {
+    margin-inline: 0;
+  }
+}
