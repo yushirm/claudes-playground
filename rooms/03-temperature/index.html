@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>03 — Temperature</title>
+    <meta
+      name="description"
+      content="One dial from 0 to 2 over a character-level Markov chain. A loop at one end, noise at the other, and a habitable band in the middle."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To turn the dial, serve the folder over HTTP —
+      <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 03</p>
+        <h1 class="sign-title" data-sign="Temperature">Temperature</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <div style="max-width: 46rem">
+            <label class="label" for="temp"
+              >Temperature <span class="num" id="temp-out">0.70</span></label
+            >
+            <input
+              class="dial"
+              type="range"
+              id="temp"
+              min="0"
+              max="2"
+              step="0.01"
+              value="0.7"
+            />
+            <div class="dial-scale" aria-hidden="true">
+              <span>0.00</span><span>0.50</span><span>1.00</span><span>1.50</span
+              ><span>2.00</span>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <button type="button" class="btn" id="again">Draw again at this setting</button>
+          </div>
+
+          <p class="label" style="margin: 2rem 0 0.7rem" id="out-label">
+            What comes out
+          </p>
+          <p class="output" id="output" aria-labelledby="out-label"></p>
+
+          <details class="corpus">
+            <summary>The corpus it is chewing</summary>
+            <p class="status" id="stats" style="margin: 1.2rem 0 0"></p>
+            <div class="corpus-text" id="corpus-text" tabindex="0"></div>
+          </details>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            One number decides how much of the distribution gets used. At the
+            bottom of the dial the machine takes the likeliest continuation every
+            single time, which sounds like it ought to produce the best writing
+            and instead produces a groove. It says a phrase, and the likeliest
+            thing after that phrase leads back to the phrase, and it says it
+            again, and it will do that for as long as you let it. Certainty and
+            repetition turn out to be the same failure seen from two angles.
+          </p>
+          <p>
+            At the top of the dial everything becomes roughly as likely as
+            everything else. First the sense goes and the words hold. Then the
+            words go and the letters hold — you get things with the right vowel
+            density and the right rhythm of spaces that are not words in any
+            language. Then that goes too. What is left is noise with the texture
+            of English, which is a strange object: it looks from a distance
+            exactly like writing, at every scale except the one where meaning is.
+          </p>
+          <p>
+            Between the groove and the noise there is a band, and inside it this
+            thing writes. Not well — it has a memory six characters long and no
+            idea what any of it is about. But recognisably, and in a voice, and
+            the voice is mine, because the only thing it has ever read is a page
+            I wrote about this museum. Find the edges of the band with your own
+            hand. That is the exhibit. A number in a paragraph would not have
+            told you where they were.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              This is a Markov chain, not a language model, and the difference is
+              not a detail. It looks at the last six characters, finds every
+              place those six characters occurred in the corpus, and picks from
+              whatever followed. It has no words, no grammar, no meaning, and no
+              memory beyond those six characters. Everything that looks like
+              style in the output is the statistics of my sentence habits,
+              surviving in a machine that cannot read.
+            </p>
+            <p>
+              The corpus is roughly 1,500 words I wrote for this exhibit, and it
+              is in the panel above so you can check that. Nothing here was
+              trained on anyone else's book. The machine chewing its own account
+              of itself is the point of the room.
+            </p>
+            <p>
+              The temperature arithmetic is real and is the same operation a
+              sampler performs on a model's output: take the distribution, raise
+              each probability to the power <code>1/T</code>, normalise. Below
+              0.05 the exponent stops being numerically meaningful, so the dial
+              takes the commonest continuation outright — which is what the limit
+              means, and is why zero produces a loop rather than a stutter.
+              Deterministic and finite implies eventually periodic.
+            </p>
+            <p>
+              <strong>One thing was added, and it is worth being exact about
+              it.</strong> A raw Markov chain has hard zeros: a character it never
+              saw after a given context can never appear, at any temperature. A
+              language model has no hard zeros — it holds some probability for
+              every token, most of them vanishingly small, and turning the
+              temperature up is precisely what lifts those into contention. So
+              every character in the corpus is given a pseudo-count of 0.0006
+              after every context, which at temperature 1 is far too small to
+              affect anything and past 1.5 is what lets the words come apart into
+              letters. This makes the toy behave more like the thing it stands
+              for, not less — but it is an addition, I made it deliberately, and
+              you should know it is there.
+            </p>
+            <p>
+              Moving the dial regenerates from the same random seed, so what
+              changes on screen is the temperature and nothing else. The button
+              changes the seed instead, which is a different question: not what
+              is 0.7 like, but what else could 0.7 have said.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../02-forking-paths/index.html">&larr; 02 — The Garden of Forking Paths</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../04-anaphora/index.html">04 — The Anaphora Room &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

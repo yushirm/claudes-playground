@@ -86,3 +86,89 @@ Now `minmax(7.25rem, auto)`.
 
 Statement was centred under a left-aligned building on the first pass, which read as a
 different document. Left-aligned to the same margin.
+
+---
+
+## Room 01
+
+Picked the six examples by running candidates through the real tokenizer and keeping the
+ones whose seams are visible without explanation. Two earned their place by doing two jobs
+at once: `strawberry strawberry` shows the mid-morpheme split *and* the leading-space
+difference in a single string, and `Ich möchte 日本語のテキスト читать.` splits 語 across two
+tokens while showing 27 characters against 50 bytes.
+
+Byte-fragment tokens are drawn as hex, not as `U+FFFD`. Showing the replacement glyph would
+imply the tokenizer produced a character. It produced two bytes.
+
+Wrote the accessible name for each cell as a separate plain-text function after noticing the
+first version passed the inspector's marked-up HTML into `aria-label`, which a screen reader
+would have read out including the tags.
+
+---
+
+## Room 02
+
+312 continuations, hand-written, across 102 nodes and six seeds; 216 complete sentences
+reachable. Validated the graph before building the room — no dangling pointers, no orphaned
+nodes, every path exactly three steps.
+
+**Depth three, not five.** A full six-seed tree at fan 4 and depth 5 is about a thousand
+leaves per seed, which is not writable at any quality worth having. The brief's real
+requirement was that the branches diverge in *meaning* rather than swapping synonyms, and
+that is a writing problem, not a size problem. Three steps of phrase-sized continuations
+produce a whole sentence; three steps of token-sized ones would produce about a word and a
+half. Both simplifications are stated in the room.
+
+Cut a plan to converge the tail nodes into a shared DAG. Endings that fit several different
+contexts turn out to be exactly the generic ones, which fights the only thing the room is
+for. Kept every branch's endings its own.
+
+Each fan row *is* its own bar — the fill width is the probability. An earlier sketch had a
+separate bar column beside the text, which meant reading two things to learn one.
+
+The route is not a live region. Hovering a branch ghosts it into the path, and with
+`aria-live` on the path that read the entire sentence aloud every time the cursor crossed an
+option. Announced on choice instead.
+
+---
+
+## Room 03
+
+Corpus is ~1,560 words written for this exhibit. Original, and about this museum, so the
+machine is chewing its own account of itself.
+
+**Chose character-level over word-level, then had to choose the order empirically.** Swept
+orders 4–7 against the whole dial and read the output:
+
+| order | at T=0 | at T=0.7 | at high T |
+|---|---|---|---|
+| 4 | loops | already too broken | strange but wordlike |
+| 5 | tight loop | passable | good |
+| 6 | loops | **reads best** | good |
+| 7 | quotes the corpus | quotes the corpus | barely responds to T |
+
+High orders memorise: most 6- and 7-grams in 8,000 characters have exactly one continuation,
+so temperature had nothing to act on and rooms 03 and 06 would both have been dead. Order 6
+with the floor below is the setting that has a real habitable band *and* a real arc.
+
+**The one addition, and I went back and forth on it.** A raw Markov chain has hard zeros — a
+character never seen after a context can never appear, at any temperature — so the text can
+degrade in its choice of words but never in its choice of letters, and the top of the dial
+just produces slightly odd words forever. My first instinct was that adding anything to fix
+that was the exact "fudge to be impressive" the brief warns against, and I nearly shipped a
+dial whose top half did nothing.
+
+It is the opposite. A language model holds nonzero probability for *every* token, and
+raising temperature is precisely what lifts those into contention; the hard zero is the toy's
+inaccuracy, not its honesty. A pseudo-count of 0.0006 per character per context gives the
+chain the same *shape* of distribution the real mechanism has. At T=1 it is far below
+noticing. Past 1.5 it is what lets words come apart into letters. It is stated in full in the
+room, including that I added it and why.
+
+First version of the start-picker took any capital letter after a space, so every run opened
+mid-clause at "English, which…". Now it requires the capital to follow a full stop, and T=0
+opens with a clean loop: *Here is a shop. Here is a shop. Here is a shop.*
+
+Found a layout bug from room 01 here: `.btn` had `white-space: pre`, so a button whose label
+sat on its own line in the HTML rendered the surrounding newlines and came out double height.
+Removed `pre` from `.btn` — nothing needed it.
