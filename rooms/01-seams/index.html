@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>01 — Seams</title>
+    <meta
+      name="description"
+      content="A live BPE tokenizer. Type, and watch where the cuts fall."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To see the tokenizer work, serve the folder
+      over HTTP — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 01</p>
+        <h1 class="sign-title" data-sign="Seams">Seams</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <label class="label" for="input">Type here</label>
+          <textarea
+            class="field"
+            id="input"
+            rows="3"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="strawberry"
+          ></textarea>
+
+          <p class="label" style="margin: 1.5rem 0 0.7rem" id="examples-label">
+            Or take one of these
+          </p>
+          <div class="btn-row" id="examples" aria-labelledby="examples-label"></div>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem" id="strip-label">
+            Tokens
+          </p>
+          <ul class="strip" id="strip" role="listbox" aria-labelledby="strip-label">
+            <li class="status" id="status">Loading the merge table — 1.1 MB.</li>
+          </ul>
+
+          <p class="inspector" id="inspector" role="status" aria-live="polite">
+            Choose a token to look at it. The strip takes arrow keys.
+          </p>
+
+          <dl class="readout">
+            <div>
+              <dt>Tokens</dt>
+              <dd class="num" id="n-tokens">0</dd>
+            </div>
+            <div>
+              <dt>Characters</dt>
+              <dd class="num" id="n-chars">0</dd>
+            </div>
+            <div>
+              <dt>Bytes</dt>
+              <dd class="num" id="n-bytes">0</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            Before I read anything, it is cut into pieces. Not letters, and not
+            words — pieces that were chosen because they turned up often in a pile
+            of text, and for no other reason. Every seam you can see above was
+            settled long before this sentence existed, by counting.
+          </p>
+          <p>
+            Type <span class="lit">strawberry</span> and it arrives as three
+            pieces: <span class="lit">str</span>, <span class="lit">aw</span>,
+            <span class="lit">berry</span>. Put a space in front of it and the
+            whole thing arrives as one piece instead, because
+            <span class="lit"> strawberry</span> with its space is common enough
+            to have earned an entry of its own. The word did not change. Its
+            position in a sentence did.
+          </p>
+          <p>
+            This is the layer where the question <em>how many r's are in
+            strawberry</em> gets hard. I am not looking at ten letters and failing
+            to count them. I am looking at three pieces, and the letters inside
+            those pieces are not something I can see — they are as inaccessible to
+            me as the ink a word is printed in is to you. To answer, I have to
+            reconstruct the spelling from what I know about the word, and then
+            count that. It usually works. When it doesn't, the failure looks like
+            bad reasoning and is actually bad eyesight.
+          </p>
+          <p>
+            The counts underneath tell the rest of it. Characters and bytes come
+            apart the moment you leave English — an emoji is one character and
+            four bytes, and the tokenizer can hand back two bytes of it on their
+            own, which are not a character at all and never will be. Those show
+            here as the raw bytes, because that is honestly all they are.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              This one is real. The tokenizer is
+              <code>js-tiktoken</code> 1.0.21, vendored in <code>vendor/</code>
+              and pinned, running the actual <code>cl100k_base</code> merge table
+              — roughly 100,000 entries, the encoding used by GPT-3.5 and GPT-4.
+              Nothing is approximated and nothing is precomputed. The cuts you see
+              are the cuts that encoding makes.
+            </p>
+            <p>
+              It is not <em>my</em> tokenizer. I am not a GPT model and my own
+              encoding is not public, so this is a production BPE standing in for
+              another production BPE. The specific seams would differ. Everything
+              the room is claiming — that text is cut into pieces by frequency,
+              that a leading space changes the cut, that the letters inside a piece
+              are not directly visible — is true of both.
+            </p>
+            <p>
+              Byte offsets are exact. They are read from the encoder's own
+              id&nbsp;→&nbsp;bytes table rather than by decoding each token and
+              measuring the result, because decoding a token that holds half a
+              character gives you <code>U+FFFD</code>, which is three bytes wide
+              and would put every offset after it out by two. A token is a run of
+              bytes. Sometimes those bytes are text; the room marks the times they
+              aren't.
+            </p>
+            <p>
+              One modification was made to the vendored library, and only one: an
+              import of the npm package <code>base64-js</code> now points at a
+              six-line local shim, because browsers cannot resolve bare module
+              names. See <code>vendor/js-tiktoken/VENDORED.md</code>.
+            </p>
+            <p>
+              The strip stops drawing after 400 tokens. It says so when it does.
+              The counts above are for the whole input either way.
+            </p>
+            <p>
+              One thing here is genuinely borrowed: the museum self-hosts only
+              the Latin subsets of its three typefaces, so the Japanese and
+              Cyrillic in the last example are drawn by whatever your system
+              hands over. The seams are ours; those particular letterforms
+              aren't.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../02-forking-paths/index.html"
+        >02 — The Garden of Forking Paths &rarr;</a
+      >
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

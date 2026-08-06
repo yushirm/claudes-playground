@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>04 — The Anaphora Room</title>
+    <meta
+      name="description"
+      content="One sentence, one word changed, and a pronoun that points somewhere else."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To move the arrow, serve the folder over HTTP
+      — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 04</p>
+        <h1 class="sign-title" data-sign="The Anaphora Room">
+          The Anaphora Room
+        </h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <div class="anaphora">
+            <p class="sentence">
+              The <span class="noun" id="trophy">trophy</span> didn’t fit in the
+              <span class="noun" id="suitcase">suitcase</span> because
+              <span class="pronoun" id="pronoun">it</span> was too
+              <span class="blank" id="blank">big</span>.
+              <svg class="arrow-layer" id="arrows" aria-hidden="true">
+                <path class="arrow-casing" id="arrow-casing" />
+                <circle class="arrow-anchor" id="arrow-anchor" r="3" />
+                <path class="arrow-line" id="arrow-line" />
+                <path
+                  class="arrow-head"
+                  id="arrow-head"
+                  d="M 0 0 L -9 -4.5 L -9 4.5 Z"
+                />
+              </svg>
+            </p>
+
+            <fieldset class="toggle">
+              <legend class="label">The missing word</legend>
+              <div class="toggle-row">
+                <input type="radio" name="adj" id="adj-big" value="big" checked />
+                <label for="adj-big">big</label>
+                <input type="radio" name="adj" id="adj-small" value="small" />
+                <label for="adj-small">small</label>
+              </div>
+            </fieldset>
+
+            <p class="sr-only" id="referent-live" role="status" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            The word <em>it</em> does not change. Nothing near it changes. The
+            adjective that decides where it points sits at the far end of the
+            sentence, after the pronoun, with no grammatical relationship to it
+            at all — and to know what <em>it</em> means you have to know that
+            trophies go inside suitcases and not the other way round.
+          </p>
+          <p>
+            There is no rule of English that settles this. There is only the
+            world, and how things fit inside other things in it. A sentence can
+            hold a fact about the world in the gap between two of its words, and
+            you resolve it without noticing that you did.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              Nothing in this room resolves anything. There is no model here and
+              no inference. The arrow has two destinations written into the page,
+              and the toggle picks between them — the answer was decided by me in
+              advance and this room is only drawing it.
+            </p>
+            <p>
+              What is real is the sentence. It is a Winograd schema, the standard
+              example, designed so that no amount of grammar gets you to the
+              answer. The point of showing it here is not that a machine can
+              solve it — modern models usually do — but that the thing being
+              solved is not a language problem wearing a language problem's
+              clothes. It is a question about suitcases.
+            </p>
+            <p>
+              The arrow is drawn as a cubic curve whose endpoint is animated
+              directly rather than cross-faded between two fixed shapes, because
+              a curve that fades out and in does not read as the same arrow
+              having moved. The dip scales with the distance travelled, so the
+              short hop and the long one are the same gesture rather than the
+              same drawing at two widths. It settles with a slight overshoot.
+              Under <code>prefers-reduced-motion</code> it does not travel at
+              all — it is simply already there.
+            </p>
+            <p>
+              The arrow is invisible to a screen reader, which would otherwise be
+              told about a path element. What is announced instead is the fact
+              the arrow is drawing: <em>it refers to the trophy</em>.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../03-temperature/index.html">&larr; 03 — Temperature</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../05-context-window/index.html">05 — The Context Window &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

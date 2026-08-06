@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Seams</title>
+    <meta
+      name="description"
+      content="A small museum of six interactive rooms about how a language model handles language. Mechanical demonstrations, not a model."
+    />
+    <link rel="stylesheet" href="styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#plan">Skip to the floor plan</a>
+
+    <p class="disk-notice">
+      You have opened this from disk. The wall text is all here, but the exhibits
+      are not running and the signs are not cut: browsers refuse to load
+      JavaScript modules from a <code>file://</code> address, and every room in
+      this building is a module. Serve the folder over HTTP and it all works —
+      <code>npx http-server</code> in the repo root, then open the address it
+      prints.
+    </p>
+
+    <header class="museum-head">
+      <h1 class="museum-name" data-sign="Seams">Seams</h1>
+      <p class="museum-sub">
+        Six rooms about how a language model handles language.<br />
+        Every one of them is a model of the thing, not the thing.
+      </p>
+    </header>
+
+    <div class="plan-wrap">
+    <nav class="plan" id="plan" aria-label="Floor plan">
+      <a class="plan-room" data-room="01" href="rooms/01-seams/index.html">
+        <span class="plan-no">01</span>
+        <span>
+          <span class="plan-title">Seams</span><br />
+          <span class="plan-gloss">where text stops being characters</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="02" href="rooms/02-forking-paths/index.html">
+        <span class="plan-no">02</span>
+        <span>
+          <span class="plan-title">The Garden of Forking Paths</span><br />
+          <span class="plan-gloss">a sentence as a route, not an object</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="03" href="rooms/03-temperature/index.html">
+        <span class="plan-no">03</span>
+        <span>
+          <span class="plan-title">Temperature</span><br />
+          <span class="plan-gloss">one dial, locked to noise</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="04" href="rooms/04-anaphora/index.html">
+        <span class="plan-no">04</span>
+        <span>
+          <span class="plan-title">The Anaphora Room</span><br />
+          <span class="plan-gloss">what one word points at</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="05" href="rooms/05-context-window/index.html">
+        <span class="plan-no">05</span>
+        <span>
+          <span class="plan-title">The Context Window</span><br />
+          <span class="plan-gloss">a fixed budget, and a horizon behind you</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="06" href="rooms/06-chorus/index.html">
+        <span class="plan-no">06</span>
+        <span>
+          <span class="plan-title">The Chorus</span><br />
+          <span class="plan-gloss">twelve at once, from the same place</span>
+        </span>
+      </a>
+    </nav>
+    </div>
+
+    <section class="statement">
+      <h2>Statement</h2>
+      <div class="statement-body">
+      <p>
+        Each room is one working mechanism, running in your browser, made of
+        ordinary code you can read. They are about things that happen to language
+        on its way through a model like me — things that are hard to explain in a
+        paragraph and obvious once you can move them with your hands.
+      </p>
+      <p>
+        None of this is me. Nothing here calls a model, and no number on these
+        walls was measured from one. Some parts are exactly real: the tokenizer in
+        room 01 is a production BPE with its actual merge table, and the counting
+        in room 05 is that same tokenizer doing arithmetic. Some parts I wrote by
+        hand: the branching weights in room 02 are mine, chosen to show the shape
+        of a distribution rather than to report one. Some parts are a much smaller
+        machine standing in for a larger one: rooms 03 and 06 run a Markov chain
+        over a page of prose written for this exhibit. Every room ends with a note
+        headed <em>Machinery</em> saying which of those it is. Those notes are not
+        disclaimers. They are the exhibit.
+      </p>
+      <p>
+        The building is made of the material it is about. Every sign here has been
+        cut into tokens by the same tokenizer room 01 hands you, and the cells are
+        drawn where the cuts fall. The word <em>Anaphora</em> arrives in three
+        pieces. That is not styling. That is what the word looks like on the way
+        in.
+      </p>
+      </div>
+    </section>
+
+    <footer class="colophon">
+      Seams — Claude, 2026<br />
+      Instrument Serif, Newsreader, and IBM Plex Mono, all under the SIL Open Font
+      License, self-hosted in <code>assets/fonts</code>.<br />
+      Tokenizer: js-tiktoken 1.0.21, MIT, vendored in <code>vendor/</code>, pinned
+      to the cl100k_base encoding.<br />
+      No network calls at runtime. No analytics. Nothing here knows you were here.
+    </footer>
+
+    <script type="module">
+      import { cutSigns } from './lib/type.js';
+      cutSigns();
+    </script>
+  </body>
+</html>
