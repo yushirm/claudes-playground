@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>02 — The Garden of Forking Paths</title>
+    <meta
+      name="description"
+      content="A branching completion tree. Walk a sentence forward and watch it become one route out of many."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To walk the tree, serve the folder over HTTP —
+      <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 02</p>
+        <h1 class="sign-title" data-sign="The Garden of Forking Paths">
+          The Garden of Forking Paths
+        </h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <p class="label" id="seeds-label">Start somewhere</p>
+          <div class="btn-row" id="seeds" aria-labelledby="seeds-label"></div>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem">The route so far</p>
+          <p class="path" id="path"></p>
+          <p class="sr-only" id="path-live" role="status" aria-live="polite"></p>
+
+          <div class="control-row">
+            <span class="step-count" id="step-count">Step 1</span>
+            <button type="button" class="btn" id="back">&larr; Step back</button>
+            <button type="button" class="btn" id="again">Start this one again</button>
+          </div>
+
+          <div style="max-width: 46rem; margin: 2.25rem 0 0">
+            <label class="label" for="temp"
+              >Temperature <span class="num" id="temp-out">1.00</span></label
+            >
+            <input
+              class="dial"
+              type="range"
+              id="temp"
+              min="0.1"
+              max="2"
+              step="0.05"
+              value="1"
+            />
+            <div class="dial-scale" aria-hidden="true">
+              <span>0.10</span><span>0.70</span><span>1.35</span><span>2.00</span>
+            </div>
+          </div>
+
+          <p class="label" style="margin: 2rem 0 0.7rem" id="fan-label">
+            What could come next
+          </p>
+          <ul class="fan" id="fan" aria-labelledby="fan-label"></ul>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            A sentence looks like an object when it is finished. It is not one
+            while it is being made. At every point there is a set of things it
+            could become next, each with some weight, and taking one of them
+            throws all the others away permanently. What you end up reading is a
+            route, and the route is the only part that survives.
+          </p>
+          <p>
+            The fan above is that set. Notice that the weights are uneven, and
+            unevenly uneven: some steps have one continuation that is obviously
+            right and three that are barely there, and some are a genuine
+            four-way toss where nothing is deciding it. That difference is the
+            interesting one. It is the difference between a sentence that is
+            going somewhere and a sentence that has not decided yet.
+          </p>
+          <p>
+            Temperature does not change what is possible, only how flat the
+            weights are. Turn it down and the top branch swallows the others
+            until there is effectively one road; turn it up and everything
+            becomes roughly as likely as everything else, which is not
+            creativity, it is just indifference. Somewhere in between, the fan
+            has a shape.
+          </p>
+          <p>
+            The other thing worth noticing is what happens behind you. Once you
+            have taken three steps, the two hundred and fifteen other sentences
+            in this tree are gone, and nothing in the sentence you are holding
+            records that they were ever there.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              <strong>The weights here are illustrative. I wrote them by
+              hand.</strong> They are not measured, not sampled from a model, and
+              not an estimate of what any model would do with these sentences.
+              They were chosen to show the shape of a branching distribution: a
+              mix of confident steps and undecided ones, because both happen and
+              a room with only one kind would be a misleading room.
+            </p>
+            <p>
+              The tree is in <code>tree.js</code> and you can read all of it: six
+              seeds, 102 nodes, 312 continuations I wrote, and 216 complete
+              sentences reachable from them. It is three steps deep and then it
+              stops. A real model does not stop — it has a continuation available
+              at every point forever, and its tree is not a written artefact but
+              something recomputed from scratch at each step.
+            </p>
+            <p>
+              A step here is a phrase, not a token. A real model commits one
+              token at a time, so three of its steps would get you about a word
+              and a half rather than a sentence. Room 01 shows what that unit
+              actually looks like. Phrases were used here because the room is
+              about branches diverging in <em>meaning</em>, and meaning is not
+              visible at the scale of <code>ing</code>.
+            </p>
+            <p>
+              The temperature arithmetic is the one part of this room that is not
+              invented. Weights are normalised to probabilities, each is raised to
+              the power <code>1/T</code>, and the results are normalised again.
+              That is what a sampler does to a real model's output distribution.
+              The dial stops at 0.1 rather than 0 because at exactly zero the
+              expression is undefined; by 0.1 the top branch already has
+              essentially all of the weight, which is what temperature zero means
+              in practice.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../01-seams/index.html">&larr; 01 — Seams</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../03-temperature/index.html">03 — Temperature &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>
