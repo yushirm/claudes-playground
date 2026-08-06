@@ -1004,6 +1004,128 @@ a {
   }
 }
 
+/* --- room 04: the anaphora room ------------------------------------------- */
+/* The smallest room, and it should feel like it. One sentence, one toggle, one
+   arrow. Nothing else is allowed in here. */
+
+.anaphora {
+  position: relative;
+  max-width: 44rem;
+  margin: 0;
+}
+
+.sentence {
+  position: relative;
+  font-family: var(--font-text);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.85;
+  margin: 0;
+  /* Room under the last line for the arrow to swing through, for the widths
+     where the pronoun lands on it. Just enough to clear the deepest dip. */
+  padding-bottom: 4.5rem;
+}
+
+.noun,
+.pronoun {
+  position: relative;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+  padding: 0 0.06em;
+}
+
+.noun.is-referent {
+  color: var(--marker);
+  background: var(--marker-wash);
+}
+
+.pronoun {
+  color: var(--marker);
+  background: var(--marker-wash);
+}
+
+.blank {
+  color: var(--marker);
+  font-style: italic;
+}
+
+.arrow-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.arrow-line {
+  fill: none;
+  stroke: var(--marker);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* When the sentence wraps, the arrow has to cross a line of text to get where
+   it is going. The casing is drawn in the wall colour underneath it, so the
+   crossing reads as the arrow passing in front rather than as a collision. */
+.arrow-casing {
+  fill: none;
+  stroke: var(--ground);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.arrow-head {
+  fill: var(--marker);
+}
+
+.arrow-anchor {
+  fill: var(--marker);
+}
+
+/* The toggle: two states, one of them true. Real radios underneath, so the
+   keyboard behaviour is the platform's and not an imitation of it. */
+.toggle {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.toggle-row {
+  display: flex;
+  gap: var(--gutter);
+}
+
+.toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.toggle label {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--paper);
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.toggle label:hover {
+  background: var(--marker-wash);
+}
+
+.toggle input:checked + label {
+  background: var(--marker);
+  color: var(--ground);
+}
+
+.toggle input:focus-visible + label {
+  outline: 2px solid var(--marker);
+  outline-offset: 3px;
+}
+
 /* --- floor nav ------------------------------------------------------------ */
 
 .floor-nav {
