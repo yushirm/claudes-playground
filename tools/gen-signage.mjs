@@ -28,6 +28,7 @@ const SIGNS = [
   'The Anaphora Room',
   'The Context Window',
   'The Chorus',
+  'Byte-Pair Playback',
   'Floor Plan',
   'Machinery',
 ];

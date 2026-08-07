@@ -29,7 +29,7 @@
     <header class="museum-head">
       <h1 class="museum-name" data-sign="Seams">Seams</h1>
       <p class="museum-sub">
-        Six rooms about how a language model handles language.<br />
+        Seven rooms about how a language model handles language.<br />
         Every one of them is a model of the thing, not the thing.
       </p>
     </header>
@@ -78,6 +78,13 @@
           <span class="plan-gloss">twelve at once, from the same place</span>
         </span>
       </a>
+      <a class="plan-room" data-room="07" href="rooms/07-byte-pair/index.html">
+        <span class="plan-no">07</span>
+        <span>
+          <span class="plan-title">Byte-Pair Playback</span><br />
+          <span class="plan-gloss">how the cuts in room 01 got there</span>
+        </span>
+      </a>
     </nav>
     </div>
 
@@ -93,8 +100,9 @@
       <p>
         None of this is me. Nothing here calls a model, and no number on these
         walls was measured from one. Some parts are exactly real: the tokenizer in
-        room 01 is a production BPE with its actual merge table, and the counting
-        in room 05 is that same tokenizer doing arithmetic. Some parts I wrote by
+        room 01 is a production BPE with its actual merge table, the counting
+        in room 05 is that same tokenizer doing arithmetic, and room 07 is that
+        table's own merge loop run one join at a time. Some parts I wrote by
         hand: the branching weights in room 02 are mine, chosen to show the shape
         of a distribution rather than to report one. Some parts are a much smaller
         machine standing in for a larger one: rooms 03 and 06 run a Markov chain

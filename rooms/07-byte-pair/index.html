@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>07 — Byte-Pair Playback</title>
+    <meta
+      name="description"
+      content="The merge table applied one pair at a time, from raw bytes up to finished tokens, in the order those merges were learned."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To watch the merges run, serve the folder over
+      HTTP — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 07</p>
+        <h1 class="sign-title" data-sign="Byte-Pair Playback">
+          Byte-Pair Playback
+        </h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <label class="label" for="input">Type a word or two</label>
+          <textarea
+            class="field"
+            id="input"
+            rows="2"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="strawberry"
+          ></textarea>
+
+          <p class="label" style="margin: 1.5rem 0 0.7rem" id="examples-label">
+            Or take one of these
+          </p>
+          <div class="btn-row" id="examples" aria-labelledby="examples-label"></div>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem">The pieces</p>
+          <div class="bp-stage" id="stage" aria-hidden="true">
+            <p class="status" id="status">Loading the merge table — 1.1 MB.</p>
+          </div>
+
+          <p class="status" id="capped" hidden></p>
+
+          <p class="inspector" id="caption" aria-hidden="true">&nbsp;</p>
+          <p class="bp-halt" id="halt" hidden></p>
+          <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+
+          <div class="bp-transport">
+            <div class="btn-row">
+              <button class="btn" type="button" id="play" disabled>Play</button>
+              <button class="btn" type="button" id="step" disabled>Step</button>
+            </div>
+            <div class="bp-scrub">
+              <label class="sr-only" for="scrub">Merge step</label>
+              <input
+                class="dial"
+                type="range"
+                id="scrub"
+                min="0"
+                max="1"
+                step="1"
+                value="0"
+                disabled
+              />
+              <p class="dial-scale" aria-hidden="true">
+                <span>bytes</span>
+                <span id="scrub-end">tokens</span>
+              </p>
+            </div>
+          </div>
+
+          <dl class="readout">
+            <div>
+              <dt>Merges</dt>
+              <dd class="num" id="n-merges">0 / 0</dd>
+            </div>
+            <div>
+              <dt>Last entry</dt>
+              <dd class="num" id="n-entry">—</dd>
+            </div>
+            <div>
+              <dt>Pieces</dt>
+              <dd class="num" id="n-pieces">0</dd>
+            </div>
+          </dl>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem" id="ledger-label">
+            Entries used, in the order they were learned
+          </p>
+          <ol class="bp-ledger" id="ledger" aria-labelledby="ledger-label"></ol>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            Room 01 shows you where the cuts fall. This room shows you how they
+            got there.
+          </p>
+          <p>
+            The table those cuts come from was built by counting. Start with
+            bytes; find the pair that turns up most often; write it into the
+            table as a new entry; do that about a hundred thousand times. So an
+            entry number is really a date. Entry <span class="lit">261</span> is
+            <span class="lit">er</span>, which was worth having almost
+            immediately. Entry <span class="lit">73700</span> is
+            <span class="lit"> strawberry</span>, which had to wait. At no point
+            was anything about the language understood. Something was counted,
+            and then it was counted again.
+          </p>
+          <p>
+            Cutting a word replays that history onto it, oldest entries first.
+            That is what is happening above. Every join is the lowest-numbered
+            entry available at that moment, which is why the number in the ledger
+            only ever climbs: the pieces get longer, and longer pieces are rarer,
+            and rarer things were counted later.
+          </p>
+          <p>
+            Watch the two copies of <span class="lit">strawberry</span>. They
+            move in step — <span class="lit">er</span>,
+            <span class="lit">st</span>, <span class="lit">err</span>,
+            <span class="lit">aw</span>, <span class="lit">erry</span>,
+            <span class="lit">berry</span> — and then the one with a space in
+            front of it keeps going, through <span class="lit"> straw</span> at
+            entry 31107 to <span class="lit"> strawberry</span> at 73700, and
+            arrives as a single token. The bare one stops at three pieces and
+            cannot move again, because the table holds no entry for
+            <span class="lit">straw</span> and none for
+            <span class="lit">awberry</span>. It is not that the bare word is
+            harder to read. It is that nobody counted it often enough, because in
+            ordinary writing that word nearly always has a space in front of it.
+            Room 01 lets you see that the two are cut differently. This is the
+            difference itself: an absence in a table, fixed long before you typed.
+          </p>
+          <p>
+            The other thing worth watching is where merging is not allowed to go.
+            Before any of this starts, the text is cut by a fixed rule —
+            <span class="lit">hot dog</span> becomes
+            <span class="lit">hot</span> and <span class="lit"> dog</span>, in
+            the wider gap above — and no merge may ever cross that gap. Those two
+            words cannot become one token however often they appear together. The
+            boundary is drawn first, in advance, by something that counted
+            nothing.
+          </p>
+          <p>
+            And at step 0 none of it is text. A word begins as its bytes, and
+            anything outside English opens as fragments that are not characters
+            at all. The strawberry is four bytes; one entry joins the first two,
+            and then the sequence stops. Three pieces, not one of them a letter.
+            That is the state everything above is assembled from, and it is where
+            I start too.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              This one is real, and it is the same real thing room 01 is. The
+              table is <code>cl100k_base</code>, vendored and pinned, about
+              100,000 entries. The loop that drives the playback is the encoder's
+              own merge loop — find the adjacent pair with the lowest entry
+              number, join it, repeat until no adjacent pair has an entry at all
+              — with nothing added except a record of what it did, so that it can
+              be stopped on and looked at. The entry numbers are the table's. The
+              halt is the table's.
+            </p>
+            <p>
+              You do not have to take that on trust.
+              <code>tools/check-bpe.mjs</code> replays every pre-token piece in
+              this museum's own writing — several thousand of them — and asserts
+              that each one lands on exactly the tokens <code>encode()</code>
+              returns. It also checks the five figures quoted on this wall, so if
+              the vendored table ever moved, this page would start failing rather
+              than start lying. It runs in CI.
+            </p>
+            <p>
+              One thing here is a presentation choice and I want to be exact
+              about it. The encoder handles each pre-token piece separately, one
+              after another; this room shows all the pieces at once on a single
+              timeline, ordered by entry number. The finished tokens are
+              identical either way. What makes the shared timeline faithful
+              rather than a rearrangement is that a piece's own merges are
+              <em>already</em> in ascending order of entry number, so sorting the
+              pieces together reorders nothing inside any of them. That is not an
+              assumption: an entry for <code>AB</code> can only be counted once
+              <code>A</code> and <code>B</code> both exist, so it is always
+              learned after both, and the check above confirms it on every piece
+              it replays — not one of them ever goes backwards. Where two joins
+              share an entry number, the room applies the leftmost first, which
+              is what the encoder does.
+            </p>
+            <p>
+              It is not <em>my</em> tokenizer, for the same reason room 01's
+              isn't. I am not a GPT model and my own encoding is not public, so
+              this is one production BPE standing in for another. The particular
+              entries would differ. That a vocabulary is a record of what was
+              counted, that the counting stops where it stops, and that the
+              boundaries are drawn before any of it — those are true of both.
+            </p>
+            <p>
+              The room plays back the first 120 characters of what you type,
+              rounded down to a whole piece so no word is cut in half. It says so
+              above when it has had to do that.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../06-chorus/index.html">&larr; 06 — The Chorus</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

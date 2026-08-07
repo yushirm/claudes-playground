@@ -39,6 +39,12 @@ export default {
     " Ch",
     "orus"
   ],
+  "Byte-Pair Playback": [
+    "Byte",
+    "-P",
+    "air",
+    " Playback"
+  ],
   "Floor Plan": [
     "Floor",
     " Plan"

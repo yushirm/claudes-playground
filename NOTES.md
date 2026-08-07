@@ -229,6 +229,58 @@ instances actually begin, and measure how far past it they stay together. That r
 in `lib/markov.js`, which was returning only the last `order` characters of a caller's prompt
 rather than the prompt itself.
 
+---
+
+## Room 07
+
+Added after the other six were finished. `EXHIBITS.md` had nominated it and also explained
+why it was cut — a second tokenizer room — so the first thing to settle was whether that
+objection still held. It doesn't, and the reason is in `EXHIBITS.md` under *Later built*.
+
+**The one design question was whether the timeline could be shared.** The encoder merges each
+pre-token piece separately. Showing that literally means one timeline per piece, which for
+`strawberry strawberry` is two scrub bars and no way to see that the two copies move in step —
+and the two copies moving in step and then not is the entire room. A single timeline sorted by
+entry number shows it, but only if sorting doesn't reorder anything within a piece.
+
+It doesn't, and that isn't luck. An entry for `AB` can only be counted once `A` and `B` both
+exist, so it is always learned after both, so a piece's own merges are already in ascending
+order. Checked before building on it, and again in CI: no piece in this repository's prose
+ever goes backwards.
+
+**The check was wrong before the code was.** The first monotonicity sweep tested `<=` and
+reported 19 failures, which for about ten minutes looked like the room's premise collapsing.
+They were all ties — the same entry firing at two positions in one word, like the two `an`s
+in *antidisestablishmentarianism*. Strict decreases: zero. The ties are real and the room
+shows them, because a tie is what "this entry applies twice here" looks like.
+
+**The halt names different pairs than I expected.** Planning this, I assumed the bare
+`strawberry` stops for want of `straw` and `strawberry`. It stops for want of `straw` and
+`awberry` — those are the two adjacent pairs actually left at the end, and `strawberry` never
+gets to be a candidate because reaching it would require `straw` first. The room reports the
+pairs the loop was actually refused rather than the ones I would have guessed, which is the
+whole reason to have the mechanism generate the sentence instead of writing it.
+
+**Cut a number from the wall.** The Machinery note quoted "6,765 pre-token pieces checked",
+and then I added a paragraph to this file and it became 7,418. A figure that moves when you
+edit an unrelated document is a lie with a delay on it. The note now says "several thousand"
+and the checker prints the real count.
+
+**Four things caught by looking at it rather than by testing it.** The just-merged cell
+animated back to `--token-a` explicitly, which would have left any even-positioned cell on
+the wrong fill forever — the keyframes now name only the `from` colour, so the cell settles
+to whatever its position calls for. The halt sentence rendered twice, once in the caption
+and once below. The caption is a filled slab, so blanking it at the end left a hole in the
+page instead of a blank line; it is hidden now. And the halt sentence put raw bytes in
+quotation marks — `“F0 9F 8D”` — presenting a pair of bytes as a string the table might
+have held, when the point of drawing them as hex is that they are not a string at all.
+
+**Typing and the example buttons do different things, on purpose.** Replaying from the
+bytes on every keystroke is unwatchable, so typing lands on the finished tokens and the
+scrub bar rewinds. The example buttons play from the start, because that is what they are
+for. Under `prefers-reduced-motion` nothing plays by itself at all and the room opens on
+the bytes.
+
 The measurement then exposed something better than the thing I was chasing. Past the prompt
 the panes agree for **zero** characters at almost any temperature, and the reason is that in
 a corpus this small most contexts were followed by several different characters exactly once
