@@ -28,6 +28,9 @@ jobs:
       - name: Verify generated signage data is current
         run: node tools/gen-signage.mjs --check
 
+      - name: Verify room 07 replays the encoder's own merge loop
+        run: node tools/check-bpe.mjs
+
       - name: Assert no absolute-rooted href/src paths
         run: |
           if grep -rEn '(href|src)=["'"'"']/' --include='*.html' --include='*.js' --include='*.css' .; then
