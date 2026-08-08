@@ -29,8 +29,14 @@ const SIGNS = [
   'The Context Window',
   'The Chorus',
   'Byte-Pair Playback',
+  'The Comma',
+  'The Gap',
+  'Convergents',
+  'Liars',
   'Floor Plan',
   'Machinery',
+  'Language',
+  'Almost',
 ];
 
 await load();
