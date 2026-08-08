@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>11 — Liars</title>
+    <meta
+      name="description"
+      content="A primality test that is right about almost every number, and wrong about 561 no matter how many times you run it."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To run the tests, serve the folder over HTTP —
+      <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 11</p>
+        <h1 class="sign-title" data-sign="Liars">Liars</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <p class="label" id="pick-label">A number to test</p>
+          <div class="btn-row" id="pick" aria-labelledby="pick-label"></div>
+
+          <p class="label" style="margin: 1.75rem 0 0.7rem">
+            <label for="base">And a base to test it with</label>
+          </p>
+          <div class="liar-controls">
+            <input
+              class="field liar-base"
+              id="base"
+              type="number"
+              min="2"
+              step="1"
+              value="2"
+              inputmode="numeric"
+              autocomplete="off"
+            />
+            <button class="btn" type="button" id="random-base">Any other base</button>
+          </div>
+
+          <p class="label" style="margin: 2.5rem 0 0.7rem">
+            Fermat's test — raise the base to the power of <span id="nm1">560</span>
+          </p>
+          <div class="ladder-strip" id="fermat-strip" aria-hidden="true"></div>
+          <p class="status" id="fermat-caption"></p>
+          <p class="verdict" id="fermat-verdict">—</p>
+
+          <p class="label" style="margin: 2.75rem 0 0.7rem">
+            Miller–Rabin — the same multiplications, watched on the way up
+          </p>
+          <p class="status" id="mr-split">—</p>
+          <div class="ladder-strip" id="mr-strip" aria-hidden="true"></div>
+          <p class="status" id="mr-why">—</p>
+          <p class="verdict" id="mr-verdict">—</p>
+          <p class="status liar-factor" id="mr-factor" hidden></p>
+
+          <p class="label" style="margin: 2.75rem 0 0.7rem">The truth</p>
+          <p class="status" id="truth">—</p>
+
+          <div class="btn-row" style="margin-top: 1.75rem">
+            <button class="btn" type="button" id="sweep">
+              Try every base there is
+            </button>
+          </div>
+          <div class="sweep-out" id="sweep-out" hidden>
+            <dl class="readout">
+              <div>
+                <dt>Bases that lie</dt>
+                <dd class="num" id="s-liars">—</dd>
+              </div>
+              <div>
+                <dt>Bases that catch it honestly</dt>
+                <dd class="num" id="s-witnesses">—</dd>
+              </div>
+              <div>
+                <dt>Bases that only share a factor</dt>
+                <dd class="num" id="s-sharing">—</dd>
+              </div>
+            </dl>
+            <p class="status" id="sweep-note"></p>
+          </div>
+
+          <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            Fermat noticed that if <span class="lit">p</span> is prime then
+            raising anything to the power <span class="lit">p − 1</span> and
+            taking the remainder mod <span class="lit">p</span> gives you
+            <span class="lit">1</span>. Every time, for every base. It is one of
+            the tidiest facts in arithmetic and it is cheap to check — the
+            exponent looks enormous but square-and-multiply gets there in about
+            as many steps as the number has bits, which is the strip above.
+          </p>
+          <p>
+            So run it backwards. Take a number you do not know about, pick a
+            base, do the exponentiation. If the answer is not
+            <span class="lit">1</span>, it is definitely not prime — that
+            direction is a proof. If the answer <em>is</em>
+            <span class="lit">1</span>, then… it passed. Try another base. Try
+            twenty. Each one that passes makes primality look better, and this is
+            the entire basis of how large primes are found in practice.
+          </p>
+          <p>
+            It works. On <span class="lit">91</span>, which is
+            <span class="lit">7 × 13</span>, 36 of the 70 available bases catch
+            it immediately; you would have to be unlucky twice in a row to be
+            misled. Now put <span class="lit">561</span> in and start trying
+            bases. Try <span class="lit">2</span>. Try
+            <span class="lit">5</span>. Try <span class="lit">50</span>. Press
+            the random button until you are bored. Every base you pick will tell
+            you it is prime.
+          </p>
+          <p>
+            <span class="lit">561</span> is <span class="lit">3 × 11 × 17</span>.
+            And it is not that the test usually fails here — the test
+            <em>never</em> succeeds here. Press <em>try every base there is</em>
+            and the machine will work through all 558 of them: 318 say prime and
+            are lying, and not one single base catches it honestly. The remaining
+            240 do report "composite", but look at what they are: they are the
+            multiples of 3, 11 and 17. They did not test primality at all. They
+            tripped over a factor on the way in, which is trial division wearing
+            the test's clothes.
+          </p>
+          <p>
+            This is a different kind of wrong from the rest of this wing. A grid
+            being too coarse gives you an error you can measure and bound. Here
+            there is no error to measure: the procedure has a failure mode where
+            running it more often does not help at all, and gives you no signal
+            that this is the case. These are the Carmichael numbers.
+            <span class="lit">561</span> is the smallest, then
+            <span class="lit">1105</span> and <span class="lit">1729</span>, and
+            in 1994 they were proved to go on forever.
+          </p>
+          <p>
+            The fix is not a different calculation. It is the same calculation,
+            watched. Mod a prime, the only things that square to
+            <span class="lit">1</span> are <span class="lit">1</span> and
+            <span class="lit">−1</span> — that is a fact about fields, and
+            composites do not have it. So instead of computing
+            <span class="lit">a<sup>n−1</sup></span> in one go, split
+            <span class="lit">n − 1</span> into
+            <span class="lit">2<sup>s</sup> × d</span>, compute
+            <span class="lit">a<sup>d</sup></span>, and then square it
+            <span class="lit">s</span> times. You arrive at the same place. But
+            now you can see what you passed through.
+          </p>
+          <p>
+            For <span class="lit">561</span> at base <span class="lit">2</span>
+            the sequence is
+            <span class="lit">263 → 166 → 67 → 1</span>. There it is. Something
+            squared to <span class="lit">1</span>, and that something was
+            <span class="lit">67</span>, which is neither
+            <span class="lit">1</span> nor <span class="lit">560</span>. A prime
+            modulus cannot do that. Caught — by exactly the same multiplications
+            Fermat's test was already performing and throwing away.
+          </p>
+          <p>
+            And the catch is better than a verdict. If
+            <span class="lit">67² ≡ 1</span> then
+            <span class="lit">561</span> divides
+            <span class="lit">66 × 68</span> while dividing neither, so it must
+            have split its factors between them — and
+            <span class="lit">gcd(66, 561)</span> is
+            <span class="lit">33</span>. The witness does not merely announce
+            that the number is composite. It hands you a piece of it.
+          </p>
+          <p>
+            So is Miller–Rabin safe? It is much better: only
+            <span class="lit">8</span> bases fool it on
+            <span class="lit">561</span>, against Fermat's 318, and there is a
+            theorem saying at most a quarter of bases can ever lie about any
+            composite. It is not safe. Put in
+            <span class="lit">2047</span>, which is
+            <span class="lit">23 × 89</span>, and test it with base
+            <span class="lit">2</span>: it passes, because
+            <span class="lit">2¹⁰²³</span> is already
+            <span class="lit">1</span> and nothing suspicious ever happens. It is
+            the smallest composite that manages this. Base
+            <span class="lit">3</span> catches it at once — but there is a number
+            that survives 2, 3, 5 and 7 together
+            (<span class="lit">3215031751</span>), and for any fixed list of
+            bases you care to name there is a number waiting past it.
+          </p>
+          <p>
+            Which is the room. Every other exhibit in this wing has a residue you
+            can put a number on: 23.46 cents, one grid square, one part in
+            <span class="lit">q²</span>. This one's residue is a probability, and
+            the thing being approximated is not a quantity but a
+            <em>fact</em> — this number either is prime or it is not, and you are
+            going to act on a strong opinion instead. Almost every large prime
+            underneath the encryption you used to load this page was certified
+            this way. That is not a scandal. It is a bet whose price is known,
+            taken deliberately, by people who did the arithmetic on how often it
+            loses. The failure is not in taking the bet. It is in forgetting that
+            a bet is what it was.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              Both tests are the real ones, and the room runs them rather than
+              describing them. The strips are the actual intermediate values.
+            </p>
+            <p>
+              Every exhaustive claim on this wall is checked exhaustively in CI
+              by <code>tools/check-liars.mjs</code>, because "no base catches
+              this" is not a thing to assert. It sweeps all 558 bases of 561 and
+              confirms that the honest-witness count is zero; it confirms 561 is
+              the smallest Carmichael number by testing every odd number below
+              it; it confirms 2047 is the smallest composite that fools
+              Miller–Rabin at base 2 the same way; and it checks that both tests
+              pass a genuine prime at every single base, which is what would
+              catch an implementation that was broken rather than fooled.
+            </p>
+            <p>
+              The arithmetic is <code>BigInt</code>, and not because these
+              numbers are large. Modular arithmetic on doubles goes silently
+              wrong the moment a product passes
+              <code>2⁵³</code>, for the reason room 09 is about; building a room
+              on "a test that is right until it isn't" on top of arithmetic that
+              is right until it isn't would have been funny once and wrong
+              afterwards.
+            </p>
+            <p>
+              Three simplifications worth naming. A real implementation would
+              divide by the small primes first, so it would never reach the
+              interesting part of this room for numbers this size. It would use
+              random bases rather than letting you choose, precisely to stop an
+              adversary handing it a number tuned to the bases it uses. And for
+              numbers below about <code>3.3 × 10²⁴</code> there are known fixed
+              sets of bases that make Miller–Rabin
+              <em>deterministic</em> — no bet at all — which is a real and
+              interesting thing this room does not show.
+            </p>
+            <p>
+              The best "almost" in this subject is also not built. The
+              Baillie–PSW test combines a Miller–Rabin base-2 pass with a
+              different kind of test whose liars are believed to be disjoint. No
+              composite has ever been found that fools it, and none has been
+              proved not to exist, and it has been in production for forty
+              years. A test that is either perfect or has a counterexample
+              nobody has met is a better room than this one. It is also not a
+              mechanism you can put your hands on, since the exhibit would be an
+              absence.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../10-convergents/index.html">&larr; 10 — Convergents</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>
