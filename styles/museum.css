@@ -419,7 +419,15 @@ a {
   font-size: 0.84em;
   background: var(--paper);
   padding: 0.1em 0.32em;
-  white-space: pre;
+  /* pre-wrap, not pre. Wing One's literals are short — token strings, entry
+     numbers — and never needed to break. Room 09 quotes a fifty-five digit
+     expansion in the middle of a sentence, which at 375px is nearly twice the
+     width of the screen; `pre` pushed the whole page sideways. Runs of spaces
+     still have to survive, because a leading space is the point of half the
+     literals in room 01, so the wrapping is added rather than the preserving
+     taken away. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* --- machinery ------------------------------------------------------------ */
@@ -1695,6 +1703,229 @@ a {
 .comma-table .btn {
   padding: 0.3rem 0.8rem;
   font-size: 0.75rem;
+}
+
+/* --- room 09: the gap ----------------------------------------------------- */
+/* Sixty-four cells, in three groups, at the same gutter as the token strip in
+   room 01 — because it is the same idea. A number arrives cut into fields the
+   way a word arrives cut into tokens, and the cuts were decided in advance by
+   something that has never seen this number. */
+
+.bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.bit-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+}
+
+.bit {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.4rem 0.28rem;
+  min-width: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--paper);
+}
+
+/* A set bit is the reading; an unset one is the ruler it is read against. */
+.bit.is-set {
+  color: var(--ink);
+}
+
+.bit-group.is-sign .bit.is-set,
+.bit-group.is-sign .bit {
+  background: var(--recess);
+}
+
+.bit-group.is-exp .bit.is-set {
+  background: var(--token-a);
+}
+
+.bit-group.is-man .bit.is-set {
+  background: var(--token-b);
+}
+
+.bit-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  margin: 0 0 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bit-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.bit-swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  display: inline-block;
+}
+
+.bit-swatch.is-sign {
+  background: var(--recess);
+}
+.bit-swatch.is-exp {
+  background: var(--token-a);
+}
+.bit-swatch.is-man {
+  background: var(--token-b);
+}
+
+/* The values. Long expansions wrap rather than scroll — a fifty-five digit
+   number is the exhibit, so it must never be cut off at the edge of a box. */
+
+.gap-values {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.gap-values div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.gap-values dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gap-values dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.gap-values dd.is-exact {
+  background: var(--paper);
+  padding: 0.6rem 0.7rem;
+}
+
+.gap-values dd.is-live {
+  color: var(--marker);
+}
+
+/* ten tenths */
+
+.tenths {
+  list-style: none;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0;
+  display: grid;
+  gap: var(--gutter);
+}
+
+.tenths li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 1rem;
+  background: var(--paper);
+  padding: 0.5rem 0.7rem;
+}
+
+.tenths-n {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 5.5rem;
+}
+
+.tenths-v {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  flex: 1 1 16rem;
+}
+
+.tenths-v.is-live {
+  color: var(--marker);
+}
+
+/* the ladder */
+
+.ladder {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  margin: 0.75rem 0 1.5rem;
+  font-size: 0.8125rem;
+}
+
+.ladder th,
+.ladder td {
+  padding: 0.5rem 0.6rem;
+  text-align: right;
+  background: var(--paper);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ladder thead th {
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: normal;
+}
+
+.ladder tr.is-live td,
+.ladder tr.is-live th {
+  background: var(--marker-wash);
+  color: var(--marker);
+}
+
+.ladder-power {
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+
+.ladder-power sup {
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.ladder tr.is-live .ladder-power {
+  color: var(--marker);
+}
+
+/* A table that cannot shed a column at 375px without losing its sentence is
+   allowed to scroll inside itself — but only itself. The page never scrolls
+   sideways. */
+.table-wrap {
+  overflow-x: auto;
+  /* Positioned so that the absolutely-positioned .sr-only labels inside these
+     tables resolve against the wrapper. Left static they resolve against the
+     viewport, escape the scroller entirely, and push the page three pixels
+     sideways from a element that is one pixel wide and invisible. */
+  position: relative;
 }
 
 /* --- narrow --------------------------------------------------------------- */

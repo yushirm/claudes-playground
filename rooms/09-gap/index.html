@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>09 — The Gap</title>
+    <meta
+      name="description"
+      content="The number you asked for and the number you got. Every decimal a machine holds is a nearby binary one, written out here in full."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To take a number apart, serve the folder over
+      HTTP — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 09</p>
+        <h1 class="sign-title" data-sign="The Gap">The Gap</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <label class="label" for="input">Type a number</label>
+          <input
+            class="field"
+            id="input"
+            type="text"
+            inputmode="decimal"
+            spellcheck="false"
+            autocomplete="off"
+            value="0.1"
+          />
+
+          <p class="label" style="margin: 1.5rem 0 0.7rem" id="examples-label">
+            Or take one of these
+          </p>
+          <div class="btn-row" id="examples" aria-labelledby="examples-label"></div>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem">
+            The sixty-four bits it is actually stored as
+          </p>
+          <div class="bits" id="bits" aria-hidden="true"></div>
+          <p class="bit-key" aria-hidden="true">
+            <span class="bit-key-item"><span class="bit-swatch is-sign"></span>sign</span>
+            <span class="bit-key-item"><span class="bit-swatch is-exp"></span>exponent, 11 bits</span>
+            <span class="bit-key-item"><span class="bit-swatch is-man"></span>fraction, 52 bits</span>
+          </p>
+
+          <dl class="gap-values">
+            <div>
+              <dt>You asked for</dt>
+              <dd class="num" id="v-asked">0.1</dd>
+            </div>
+            <div>
+              <dt>The machine holds</dt>
+              <dd class="num is-exact" id="v-exact">—</dd>
+            </div>
+            <div>
+              <dt>Which is out by</dt>
+              <dd class="num" id="v-error">—</dd>
+            </div>
+            <div>
+              <dt>Next number up</dt>
+              <dd class="num" id="v-next">—</dd>
+            </div>
+            <div>
+              <dt>Nothing exists between them — the step here is</dt>
+              <dd class="num" id="v-gap">—</dd>
+            </div>
+          </dl>
+
+          <p class="status" id="status"></p>
+
+          <p class="label" style="margin: 3rem 0 0.7rem">
+            Ten tenths
+          </p>
+          <p class="status" id="tenths-intro">
+            Start at zero and add <span class="lit">0.1</span> ten times. Each
+                line is the exact value of the running total.
+          </p>
+          <ol class="tenths" id="tenths" aria-live="polite"></ol>
+          <div class="btn-row">
+            <button class="btn" type="button" id="add-tenth">Add 0.1</button>
+            <button class="btn" type="button" id="run-tenths">Add all ten</button>
+            <button class="btn" type="button" id="reset-tenths">Back to zero</button>
+          </div>
+
+          <p class="label" style="margin: 3rem 0 0.7rem">
+            Where the grid gets coarse
+          </p>
+          <div class="table-wrap">
+          <table class="ladder" id="ladder">
+            <caption class="sr-only">
+              The distance between consecutive representable numbers, at
+              different magnitudes
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Between</th>
+                <th scope="col">and</th>
+                <th scope="col">consecutive numbers are</th>
+                <th scope="col">apart</th>
+              </tr>
+            </thead>
+            <tbody id="ladder-body"></tbody>
+          </table>
+          </div>
+
+          <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            There are infinitely many numbers between 0 and 1, and a double has
+            sixty-four bits. So a double cannot be a number. It is a
+            <em>square on a grid</em>, and writing <span class="lit">0.1</span>
+            in a program does not store a tenth — it finds the nearest square
+            and stores that.
+          </p>
+          <p>
+            The nearest square to a tenth is
+            <span class="lit">
+              0.1000000000000000055511151231257827021181583404541015625</span
+            >. That is not a rounded version of what is stored. That is what is
+            stored, exactly, every digit, because a double is a whole number
+            times a power of two and every power of two has a decimal expansion
+            that ends. Your language prints "0.1" because it prints the shortest
+            decimal that would find this same square again, which is a kindness
+            and also a way of never mentioning it.
+          </p>
+          <p>
+            The reason is the same as room 08's, and it is the same arithmetic.
+            A tenth is <span class="lit">1/10</span>, and 10 is 2 × 5, and there
+            is no power of two with a factor of five in it. So a tenth in binary
+            recurs forever — <span class="lit">0.0001100110011…</span> — exactly
+            as a third recurs in decimal, and for exactly the same reason. Look
+            at the fraction bits above with <span class="lit">0.1</span> in the
+            box: <span class="lit">0011</span> over and over, until the fifty-two
+            bits run out and it stops mid-pattern. Twelve fifths never landed on
+            an octave because 3 is not 2. A tenth never lands on a double
+            because 5 is not 2.
+          </p>
+          <p>
+            One number being slightly wrong is harmless. What makes this a room
+            rather than a footnote is that the wrongness moves. Add
+            <span class="lit">0.1</span> to itself ten times above. The third
+            line is <span class="lit">0.30000000000000004</span>, which is the
+            most famous number in computing and is simply what happens when two
+            errors that were both rounded up get added. By the tenth line you
+            have <span class="lit">0.99999999999999988897769753748434595763683319091796875</span>,
+            which is one grid square below 1 and will fail any test that asks
+            whether it is 1. Nothing went wrong. Every single step rounded to the
+            nearest available square, correctly, and the destination is still not
+            where you were going.
+          </p>
+          <p>
+            Look at the fifth line, though. After five additions the total is
+            <span class="lit">0.5</span> — not nearly a half, exactly a half, on
+            the nose, with a shorter expansion than any line near it. The error
+            does not accumulate steadily. It wanders off the true value and
+            then, at a magnitude where the grid happens to fall kindly, back
+            onto it, and then off again. This is the property that makes
+            floating point genuinely difficult rather than merely imprecise: you
+            cannot reason about the error by watching it grow, because it does
+            not grow. It appears, cancels, and comes back somewhere else.
+          </p>
+          <p>
+            And the grid is not even. Near zero the squares are unimaginably
+            fine; out past
+            <span class="lit">4503599627370496</span> they are a whole unit
+            wide, and past twice that they are two units wide — so
+            <span class="lit">2⁵³ + 1</span> is not a number a double can hold,
+            and asking for it gives you <span class="lit">2⁵³</span> back with no
+            complaint. Beyond that point the integers themselves start going
+            missing, one in two, then three in four. The ladder above is that
+            coarsening. Counting is not a safe operation at every size.
+          </p>
+          <p>
+            This is the same shape as everything else in this wing. Twelve notes
+            over every possible ratio; a hundred thousand tokens over every
+            possible sentence; and here, about
+            <span class="lit">2⁶⁴</span> squares over the whole of the real
+            number line — which sounds enormous and is nothing, because the reals
+            between 0 and 1 alone cannot be counted at all. The grid is always
+            too coarse. It is chosen anyway, because a finite machine has no
+            other option, and then everything built on top has to be built on the
+            near-miss.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              This one is entirely real and there is very little to confess. The
+              bits above are read out of the number with a
+              <code>DataView</code> — the actual storage, not a reconstruction.
+              The next number up is found by adding <code>1</code> to that
+              sixty-four-bit pattern, which is the real
+              <code>nextafter</code>: for positive values the ordering of
+              doubles is the ordering of their bit patterns read as integers,
+              and the format was designed so that this would be true.
+            </p>
+            <p>
+              The exact decimals are computed with <code>BigInt</code> and
+              nothing else. A double is <code>m × 2^e</code>; when
+              <code>e</code> is negative, multiplying top and bottom by
+              <code>5^-e</code> turns the denominator into a power of ten, and
+              the digits fall out. No floating point is used anywhere to
+              describe floating point, which would be a slightly absurd way to
+              build this room and also wrong.
+            </p>
+            <p>
+              <code>tools/check-gap.mjs</code> checks all of it in CI: that
+              every expansion on this wall is the one the format gives, that
+              each one reads back as the number it came from — the check that
+              would catch a bad digit in the middle of fifty-five of them —
+              that <code>0.1 + 0.2</code> is exactly one grid square above the
+              double nearest 0.3, and that the grid spacings in the ladder are
+              the powers of two they claim to be.
+            </p>
+            <p>
+              Two small things. The error line compares against the decimal you
+              typed, held as an exact rational, so it is the true difference
+              rather than another rounded number; if you type something that
+              is not a plain decimal it says so instead of guessing. And the
+              ladder stops at <code>2¹⁰²⁴</code> because there is nothing after
+              it — the next step is infinity, which the format has a bit
+              pattern for and this room does not go into.
+            </p>
+            <p>
+              One thing genuinely is not shown. This room only ever rounds to
+              nearest, which is what your language does by default and what
+              every number here assumes. There are other rounding modes, and
+              hardware that can be switched between them, and the interval
+              arithmetic people build on that switch is a good deal more
+              interesting than a single grid. It is a bigger room than this one
+              and it is not built.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../08-comma/index.html">&larr; 08 — The Comma</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../10-convergents/index.html">10 — Convergents &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>
