@@ -419,7 +419,15 @@ a {
   font-size: 0.84em;
   background: var(--paper);
   padding: 0.1em 0.32em;
-  white-space: pre;
+  /* pre-wrap, not pre. Wing One's literals are short — token strings, entry
+     numbers — and never needed to break. Room 09 quotes a fifty-five digit
+     expansion in the middle of a sentence, which at 375px is nearly twice the
+     width of the screen; `pre` pushed the whole page sideways. Runs of spaces
+     still have to survive, because a leading space is the point of half the
+     literals in room 01, so the wrapping is added rather than the preserving
+     taken away. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* --- machinery ------------------------------------------------------------ */
@@ -1482,6 +1490,75 @@ a {
   display: none;
 }
 
+/* Wing two. Room 08 is the biggest room in the building because it is the only
+   one that makes a sound, and a visitor who reads the plan should be able to
+   guess that something different happens in there. Room 11 is a band along the
+   bottom: it is the last room, and the only one whose residue is a probability
+   rather than a size. */
+.plan-room[data-room='08'] { grid-column: 1 / 4; grid-row: 1 / 3; }
+.plan-room[data-room='09'] { grid-column: 4 / 7; grid-row: 1 / 2; }
+.plan-room[data-room='10'] { grid-column: 4 / 7; grid-row: 2 / 3; }
+.plan-room[data-room='11'] { grid-column: 1 / 7; grid-row: 3 / 4; }
+
+/* --- wing headings -------------------------------------------------------- */
+/* A second wing needs a sign of its own. Same treatment as a room sign — the
+   name is cut by the same tokenizer — one size down, so the building still has
+   one title and not three. */
+
+.wing-head {
+  margin: clamp(2.5rem, 6vw, 4rem) 0 1.25rem;
+}
+
+.plan + .wing-head {
+  margin-top: clamp(3.5rem, 9vw, 6rem);
+}
+
+.wing-no {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.wing-name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1;
+  margin: 0 0 0.7rem;
+}
+
+.wing-name .cells {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+/* The cell default is monospace, which is right for a token strip and wrong for
+   a sign. Room signs override it; so does this, one size down. */
+.wing-name .cell {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.02;
+  padding: 0.14em 0.12em 0.18em;
+}
+
+.wing-name[data-sign]:not(.is-cut) {
+  font-family: var(--font-display);
+}
+
+.wing-gloss {
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 34em;
+  margin: 0;
+}
+
 /* Left-aligned to the same margin as the sign and the plan. A centred column
    under a left-aligned building reads as a different document. */
 .statement {
@@ -1519,6 +1596,612 @@ a {
   color: var(--muted);
 }
 
+/* --- room 08: the comma --------------------------------------------------- */
+/* The wheel is the one drawn figure in the building, and it earns the exception
+   by being a measurement rather than an illustration: every position on it is
+   a real cents value, so the gap you see is the gap. Strokes here are the mark
+   itself, not separation, which is why the no-rules rule is not being broken. */
+
+.comma-stage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 3.5rem);
+  margin: 0.75rem 0 1.75rem;
+}
+
+.comma-wheel {
+  width: min(320px, 100%);
+  height: auto;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+/* Four values in two columns rather than the usual flex row: at this width the
+   row wrapped after three and left the fourth stranded on its own line, which
+   read as an afterthought instead of part of the same instrument. */
+.comma-readout {
+  flex: 1 1 16rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem clamp(1rem, 3vw, 2rem);
+  margin: 0;
+}
+
+.wheel-ring {
+  fill: var(--paper);
+  stroke: var(--recess);
+  stroke-width: 10;
+}
+
+.wheel-tick {
+  stroke: var(--muted);
+  stroke-width: 1;
+  opacity: 0.45;
+}
+
+.wheel-chord {
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  opacity: 0.5;
+}
+
+.wheel-dot {
+  fill: var(--ink);
+}
+
+.wheel-dot.is-root {
+  fill: var(--token-b);
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.wheel-dot.is-live {
+  fill: var(--marker);
+}
+
+.wheel-gap {
+  fill: var(--marker-wash-strong);
+}
+
+/* the vernier: the gap laid against a semitone, so 23 cents has a scale */
+
+.comma-vernier {
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.5rem;
+  overflow: visible;
+}
+
+.vern-rule,
+.vern-tick {
+  stroke: var(--muted);
+  stroke-width: 1.5;
+}
+
+.vern-fill {
+  fill: var(--marker-wash-strong);
+}
+
+.vern-mark {
+  stroke: var(--marker);
+  stroke-width: 2.5;
+}
+
+.vern-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.vern-start {
+  text-anchor: start;
+}
+.vern-end {
+  text-anchor: end;
+}
+
+.vern-mark-label {
+  fill: var(--marker);
+  text-anchor: start;
+}
+
+/* the triad table. A table because it is a table — two things measured four
+   ways — and the museum's answer to a grid is fills and space, not rules. */
+
+.comma-blend {
+  max-width: 30rem;
+  margin: 0 0 2rem;
+}
+
+.comma-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.comma-table th,
+.comma-table td {
+  padding: 0.6rem 0.7rem;
+  text-align: right;
+  background: var(--paper);
+}
+
+.comma-table thead th {
+  background: none;
+  padding-bottom: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.comma-table tbody th {
+  text-align: left;
+  font-weight: 400;
+  font-family: var(--font-text);
+}
+
+.comma-table thead th:first-child {
+  text-align: left;
+}
+
+.comma-table th:last-child,
+.comma-table td:last-child {
+  text-align: center;
+  width: 1%;
+  white-space: nowrap;
+}
+
+.comma-table td.num.is-live {
+  color: var(--marker);
+  background: var(--marker-wash);
+}
+
+.comma-ratio {
+  font-family: var(--font-mono);
+  font-size: 0.8125em;
+  color: var(--muted);
+  margin-left: 0.4em;
+}
+
+.comma-table .btn {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+}
+
+/* --- room 09: the gap ----------------------------------------------------- */
+/* Sixty-four cells, in three groups, at the same gutter as the token strip in
+   room 01 — because it is the same idea. A number arrives cut into fields the
+   way a word arrives cut into tokens, and the cuts were decided in advance by
+   something that has never seen this number. */
+
+.bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+
+.bit-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+}
+
+.bit {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  padding: 0.4rem 0.28rem;
+  min-width: 1.05rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--paper);
+}
+
+/* A set bit is the reading; an unset one is the ruler it is read against. */
+.bit.is-set {
+  color: var(--ink);
+}
+
+.bit-group.is-sign .bit.is-set,
+.bit-group.is-sign .bit {
+  background: var(--recess);
+}
+
+.bit-group.is-exp .bit.is-set {
+  background: var(--token-a);
+}
+
+.bit-group.is-man .bit.is-set {
+  background: var(--token-b);
+}
+
+.bit-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  margin: 0 0 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bit-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.bit-swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  display: inline-block;
+}
+
+.bit-swatch.is-sign {
+  background: var(--recess);
+}
+.bit-swatch.is-exp {
+  background: var(--token-a);
+}
+.bit-swatch.is-man {
+  background: var(--token-b);
+}
+
+/* The values. Long expansions wrap rather than scroll — a fifty-five digit
+   number is the exhibit, so it must never be cut off at the edge of a box. */
+
+.gap-values {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.gap-values div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.gap-values dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gap-values dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.gap-values dd.is-exact {
+  background: var(--paper);
+  padding: 0.6rem 0.7rem;
+}
+
+.gap-values dd.is-live {
+  color: var(--marker);
+}
+
+/* ten tenths */
+
+.tenths {
+  list-style: none;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0;
+  display: grid;
+  gap: var(--gutter);
+}
+
+.tenths li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 1rem;
+  background: var(--paper);
+  padding: 0.5rem 0.7rem;
+}
+
+.tenths-n {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  min-width: 5.5rem;
+}
+
+.tenths-v {
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+  flex: 1 1 16rem;
+}
+
+.tenths-v.is-live {
+  color: var(--marker);
+}
+
+/* the ladder */
+
+.ladder {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  margin: 0.75rem 0 1.5rem;
+  font-size: 0.8125rem;
+}
+
+.ladder th,
+.ladder td {
+  padding: 0.5rem 0.6rem;
+  text-align: right;
+  background: var(--paper);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ladder thead th {
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: normal;
+}
+
+.ladder tr.is-live td,
+.ladder tr.is-live th {
+  background: var(--marker-wash);
+  color: var(--marker);
+}
+
+.ladder-power {
+  font-size: 0.6875rem;
+  color: var(--muted);
+}
+
+.ladder-power sup {
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.ladder tr.is-live .ladder-power {
+  color: var(--marker);
+}
+
+/* A table that cannot shed a column at 375px without losing its sentence is
+   allowed to scroll inside itself — but only itself. The page never scrolls
+   sideways. */
+.table-wrap {
+  overflow-x: auto;
+  /* Positioned so that the absolutely-positioned .sr-only labels inside these
+     tables resolve against the wrapper. Left static they resolve against the
+     viewport, escape the scroller entirely, and push the page three pixels
+     sideways from a element that is one pixel wide and invisible. */
+  position: relative;
+}
+
+/* --- room 10: convergents ------------------------------------------------- */
+
+.conv-head {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1.4rem 2rem;
+}
+
+.conv-head dd {
+  font-size: 1rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.conv-plot {
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.25rem;
+  overflow: visible;
+}
+
+/* The true value: the one line in the figure that nothing ever lands on. It is
+   the reading, so it is drawn at full weight — the faint pair above and below
+   are the ruler. */
+.plot-axis {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.plot-grid {
+  stroke: var(--muted);
+  stroke-width: 1;
+  opacity: 0.28;
+}
+
+.plot-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  opacity: 0.55;
+}
+
+.plot-stem {
+  stroke: var(--muted);
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+.plot-dot {
+  fill: var(--ink);
+}
+
+.plot-dot.is-live {
+  fill: var(--marker);
+}
+
+.plot-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--muted);
+}
+
+.plot-true {
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.conv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  margin: 0.5rem 0 1rem;
+  font-size: 0.8125rem;
+}
+
+.conv-table th,
+.conv-table td {
+  padding: 0.5rem 0.65rem;
+  text-align: right;
+  background: var(--paper);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.conv-table thead th {
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.conv-table tr.is-live td,
+.conv-table tr.is-live th {
+  background: var(--marker-wash);
+  color: var(--marker);
+}
+
+/* A fraction that did better than its denominator entitled it to. */
+.conv-table td.is-bargain {
+  background: var(--token-b);
+}
+
+.conv-table tr.is-live td.is-bargain {
+  background: var(--marker-wash-strong);
+}
+
+/* --- room 11: liars ------------------------------------------------------- */
+
+.liar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.liar-base {
+  width: 9rem;
+  flex: 0 0 auto;
+}
+
+/* The intermediate values of an exponentiation, as a strip — the same grid as
+   room 01's tokens, because it is the same move: a computation is a sequence of
+   discrete states and you are allowed to look at each one. */
+.ladder-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gutter);
+  margin: 0 0 0.9rem;
+}
+
+.lad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  padding: 0.45rem 0.6rem 0.35rem;
+  background: var(--paper);
+}
+
+/* Alternation is segmentation here, as everywhere in this building — it says
+   where one step ends, and never that a step is important. */
+.lad:nth-child(even) {
+  background: var(--token-a);
+}
+
+.lad-n {
+  font-size: 0.625rem;
+  color: var(--muted);
+}
+
+/* The answer the test came to. Live state, so it is allowed the marker. */
+.lad.is-result {
+  background: var(--marker-wash-strong);
+  color: var(--marker);
+}
+
+.lad.is-result .lad-n {
+  color: var(--marker);
+}
+
+/* The value that should not exist. */
+.lad.is-culprit {
+  background: var(--marker);
+  color: var(--ground);
+}
+
+.lad.is-culprit .lad-n {
+  color: var(--ground);
+  opacity: 0.75;
+}
+
+.verdict {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.125rem);
+  line-height: 1.15;
+  margin: 0.35rem 0 0;
+  text-wrap: balance;
+}
+
+.verdict.is-lie {
+  color: var(--marker);
+}
+
+.verdict.is-caught {
+  color: var(--muted);
+}
+
+.liar-factor {
+  background: var(--marker-wash);
+  padding: 0.8rem 0.9rem;
+  margin-top: 0.9rem;
+}
+
+.sweep-out {
+  margin-top: 1.5rem;
+}
+
+.sweep-out .readout {
+  margin-bottom: 1rem;
+}
+
 /* --- narrow --------------------------------------------------------------- */
 /* Readable at 375px. The plan becomes a stack of blocks — still blocks, still
    no rules, still gutters between them. */
@@ -1548,7 +2231,11 @@ a {
   .plan-room[data-room='04'],
   .plan-room[data-room='05'],
   .plan-room[data-room='06'],
-  .plan-room[data-room='07'] {
+  .plan-room[data-room='07'],
+  .plan-room[data-room='08'],
+  .plan-room[data-room='09'],
+  .plan-room[data-room='10'],
+  .plan-room[data-room='11'] {
     grid-column: 1 / -1;
     grid-row: auto;
     min-height: 6.5rem;

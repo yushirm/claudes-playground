@@ -106,3 +106,71 @@ ordinary one, which is a change of attention rather than a claim about the mecha
 The one presentation choice that survived — a single timeline across all pre-token pieces
 instead of one per piece — is stated in full in the room's Machinery note, along with the
 reason it is faithful rather than a rearrangement, and it is checked in CI.
+
+---
+
+# Wing Two
+
+Four rooms built, and these considered. Same rule as above: one line each, mostly, and
+the reason has to be a real reason.
+
+## Considered, not built
+
+**The Penrose Room** — an aperiodic tiling, generated live, that almost repeats and never
+does. Genuinely beautiful and genuinely "almost". Cut because it is the one candidate
+where nothing ever *fails*: the tiling does exactly what it is supposed to, forever, and
+a visitor would be admiring a pattern rather than watching a mechanism come up short.
+Wing Two's rooms all have a gap you can put a number on. This one has a mood.
+
+**Lossy compression** — a real DCT with the quantization table under your hand, so you
+can throw away coefficients until you can tell. A strong idea, and the loss is exactly
+the wing's subject. Cut because the interesting version needs a real photograph, and
+then the exhibit is about that photograph — which face degrades first, which texture
+survives — and it becomes an art project with a slider. Also the one candidate that
+would have needed a large binary asset.
+
+**The Alabama paradox** — apportioning seats to states, where the only honest answer is
+fractional and the grid is whole people. Politically resonant, exactly the right shape,
+and I wanted it. Cut because every version I sketched was a table that changes when you
+press a button. The mechanism is a sorting rule, and a sorting rule is not something you
+can put your hands on the way a dial or a wheel is.
+
+**0.999… = 1** — the most famous "almost" there is, and the anti-room. Cut for being
+true: there is no gap at all, that is the whole point, and a room in this wing whose
+residue is exactly zero would undo the argument the other four are making. It is a good
+paragraph and not an exhibit.
+
+**Zeno, drawn** — halving the distance forever. Cut as the same problem as 0.999… with
+worse arithmetic, and because room 10 already shows an infinite sequence closing on
+something it never reaches, with the advantage of a theorem underneath it.
+
+**The Birthday Room** — 23 people, better than even odds. A genuine surprise, but it is a
+surprise about a formula rather than a near miss, and nothing in it is *almost*
+anything.
+
+**Rounding modes** — the same sum computed under round-to-nearest, toward zero, and the
+two directed modes, with interval arithmetic bracketing the truth. This is the best of
+the unbuilt and it is named in room 09's Machinery note. Cut because room 09 already owns
+the floating-point material and a second float room would be to Wing Two what a second
+tokenizer room nearly was to Wing One. If a twelfth room is ever added it should be this
+one.
+
+## Cut from rooms that were built
+
+**A wolf-fifth keyboard in room 08.** The historical tunings — meantone, the well
+temperaments — put the comma in different places, and one of those places is a single
+unusable fifth. A keyboard you could play to find the wolf would have been the best
+interactive in the wing. Cut on size: it needs twelve tunings' worth of tables and a
+playable layout, and room 08 was already the largest room in the building. The dial
+between just and equal is the honest small version, and its Machinery note says that the
+straight line it draws between them is invented and that the historical temperaments are
+not points on it.
+
+**Baillie–PSW in room 11.** Named in that room's Machinery note as the best "almost" in
+the subject: no composite has ever been found that fools it, none has been proved not to
+exist, and it has been in production for forty years. Not built because the exhibit
+would be an absence. You cannot hand someone a mechanism whose interesting property is
+that nobody has managed to break it.
+
+**A vocabulary browser for room 10's terms.** Same objection as the one raised against
+room 07's, and this time it held.

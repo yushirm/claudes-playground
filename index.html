@@ -6,7 +6,7 @@
     <title>Seams</title>
     <meta
       name="description"
-      content="A small museum of six interactive rooms about how a language model handles language. Mechanical demonstrations, not a model."
+      content="A small museum of eleven interactive rooms about discrete grids laid over continuous things — tokens over language, twelve notes over the ratios, binary floats over the number line. Mechanical demonstrations, not a model."
     />
     <link rel="stylesheet" href="styles/museum.css" />
     <script>
@@ -29,13 +29,21 @@
     <header class="museum-head">
       <h1 class="museum-name" data-sign="Seams">Seams</h1>
       <p class="museum-sub">
-        Seven rooms about how a language model handles language.<br />
+        Eleven rooms, in two wings, about grids laid over continuous things.<br />
         Every one of them is a model of the thing, not the thing.
       </p>
     </header>
 
     <div class="plan-wrap">
-    <nav class="plan" id="plan" aria-label="Floor plan">
+    <div class="wing-head">
+      <p class="wing-no">Wing One</p>
+      <h2 class="wing-name" data-sign="Language">Language</h2>
+      <p class="wing-gloss">
+        What happens to a sentence on its way through a model. Seven mechanisms,
+        each small enough to hold.
+      </p>
+    </div>
+    <nav class="plan" id="plan" aria-label="Floor plan, wing one">
       <a class="plan-room" data-room="01" href="rooms/01-seams/index.html">
         <span class="plan-no">01</span>
         <span>
@@ -86,6 +94,45 @@
         </span>
       </a>
     </nav>
+
+    <div class="wing-head">
+      <p class="wing-no">Wing Two</p>
+      <h2 class="wing-name" data-sign="Almost">Almost</h2>
+      <p class="wing-gloss">
+        The same argument in four other materials — sound, storage, fractions,
+        and a test that can be wrong for ever.
+      </p>
+    </div>
+    <nav class="plan" aria-label="Floor plan, wing two">
+      <a class="plan-room" data-room="08" href="rooms/08-comma/index.html">
+        <span class="plan-no">08</span>
+        <span>
+          <span class="plan-title">The Comma</span><br />
+          <span class="plan-gloss">the circle of fifths does not close</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="09" href="rooms/09-gap/index.html">
+        <span class="plan-no">09</span>
+        <span>
+          <span class="plan-title">The Gap</span><br />
+          <span class="plan-gloss">the number you asked for, and the one you got</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="10" href="rooms/10-convergents/index.html">
+        <span class="plan-no">10</span>
+        <span>
+          <span class="plan-title">Convergents</span><br />
+          <span class="plan-gloss">the best a fraction can do</span>
+        </span>
+      </a>
+      <a class="plan-room" data-room="11" href="rooms/11-liars/index.html">
+        <span class="plan-no">11</span>
+        <span>
+          <span class="plan-title">Liars</span><br />
+          <span class="plan-gloss">a test that is right until it isn't</span>
+        </span>
+      </a>
+    </nav>
     </div>
 
     <section class="statement">
@@ -116,6 +163,33 @@
         drawn where the cuts fall. The word <em>Anaphora</em> arrives in three
         pieces. That is not styling. That is what the word looks like on the way
         in.
+      </p>
+      <p>
+        Wing Two was added after the first seven rooms were finished, because
+        those rooms turned out to have been about one thing and never to have
+        said so. A tokenizer is a hundred thousand pieces laid over every
+        sentence anyone could write, and <em>str|aw|berry</em> is where the
+        pieces fall rather than where the meaning is. That is not a fact about
+        language models. It is what happens whenever something discrete is laid
+        over something continuous, and the residue has a name and a size in
+        every case.
+      </p>
+      <p>
+        So the second wing runs the same argument in four materials that have
+        nothing to do with each other. Twelve notes over every possible ratio,
+        and the circle of fifths misses the octave by a gap you can hear beating
+        three times a second. Sixty-four bits over the whole real line, and a
+        tenth is stored as a number fifty-five digits long that is not a tenth.
+        Fractions over the irrationals, where you can prove which near miss is
+        the best one available and prove it is still a miss. And one room where
+        the grid is not over a quantity at all but over the truth — a primality
+        test that is right about almost every number and cannot ever be right
+        about 561, however many times you run it.
+      </p>
+      <p>
+        The gap is not a defect in the grid. It is the price of having one, and a
+        finite machine has no other option. What each room does is put a number
+        on it.
       </p>
       </div>
     </section>

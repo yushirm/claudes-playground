@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>08 — The Comma</title>
+    <meta
+      name="description"
+      content="Twelve perfect fifths do not make seven octaves. The gap is exactly 531441/524288, and you can hear it."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To walk the circle and hear the gap, serve the
+      folder over HTTP — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 08</p>
+        <h1 class="sign-title" data-sign="The Comma">The Comma</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <p class="label">The circle of fifths, walked one fifth at a time</p>
+
+          <div class="comma-stage">
+            <svg
+              class="comma-wheel"
+              id="wheel"
+              viewBox="0 0 320 320"
+              role="img"
+              aria-labelledby="wheel-desc"
+            >
+              <title id="wheel-desc">
+                A circle marking one octave. A pointer steps around it by perfect
+                fifths.
+              </title>
+              <g id="wheel-ticks" aria-hidden="true"></g>
+              <g id="wheel-chords" aria-hidden="true"></g>
+              <g id="wheel-dots" aria-hidden="true"></g>
+              <g id="wheel-gap" aria-hidden="true"></g>
+            </svg>
+
+            <dl class="readout comma-readout">
+              <div>
+                <dt>Fifths taken</dt>
+                <dd class="num" id="n-step">0 / 12</dd>
+              </div>
+              <div>
+                <dt>Where you are</dt>
+                <dd class="num" id="n-ratio">1</dd>
+              </div>
+              <div>
+                <dt>Above the root</dt>
+                <dd class="num" id="n-cents">0.000 cents</dd>
+              </div>
+              <div>
+                <dt>Sounding</dt>
+                <dd class="num" id="n-freq">220.000 Hz</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn" type="button" id="step-fifth">
+              Take a fifth
+            </button>
+            <button class="btn" type="button" id="walk-all">
+              Go all the way round
+            </button>
+            <button class="btn" type="button" id="reset-wheel">Back to the root</button>
+          </div>
+
+          <p class="status" id="wheel-status">
+            Start on the root. Twelve perfect fifths should bring you home.
+          </p>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem">
+            The gap, against a semitone for scale
+          </p>
+          <svg
+            class="comma-vernier"
+            id="vernier"
+            viewBox="0 0 640 64"
+            role="img"
+            aria-labelledby="vernier-desc"
+          >
+            <title id="vernier-desc">
+              A scale from zero to one hundred cents — one semitone — with the
+              arrival after twelve fifths marked at 23.46 cents.
+            </title>
+            <g id="vernier-body"></g>
+          </svg>
+
+          <div class="btn-row">
+            <button class="btn" type="button" id="hear-gap" disabled>
+              Sound the root and where you arrived
+            </button>
+            <button class="btn" type="button" id="stop-a">Stop</button>
+          </div>
+          <p class="status" id="gap-status">
+            Walk all twelve fifths first, and this will play you the two notes at
+            once.
+          </p>
+
+          <p class="label" style="margin: 3rem 0 0.7rem">
+            What the fix cost — one triad, from pure to tempered
+          </p>
+
+          <div class="comma-blend">
+            <label class="sr-only" for="blend">Tuning, from just to equal</label>
+            <input
+              class="dial"
+              type="range"
+              id="blend"
+              min="0"
+              max="1000"
+              step="1"
+              value="0"
+            />
+            <p class="dial-scale" aria-hidden="true">
+              <span>pure ratios</span>
+              <span>equal temperament</span>
+            </p>
+          </div>
+
+          <div class="table-wrap">
+          <table class="comma-table">
+            <caption class="sr-only">
+              The third and the fifth of the triad, at the current tuning
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Interval</th>
+                <th scope="col">Above the root</th>
+                <th scope="col">Off the pure ratio</th>
+                <th scope="col">Beats per second</th>
+                <th scope="col"><span class="sr-only">Listen</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Major third <span class="comma-ratio">5/4</span></th>
+                <td class="num" id="t3-cents">386.314</td>
+                <td class="num" id="t3-off">0.000</td>
+                <td class="num" id="t3-beat">0.00</td>
+                <td>
+                  <button class="btn" type="button" id="hear-third">Hear</button>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Perfect fifth <span class="comma-ratio">3/2</span></th>
+                <td class="num" id="t5-cents">701.955</td>
+                <td class="num" id="t5-off">0.000</td>
+                <td class="num" id="t5-beat">0.00</td>
+                <td>
+                  <button class="btn" type="button" id="hear-fifth">Hear</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <div class="btn-row">
+            <button class="btn" type="button" id="hear-triad">
+              Hear the whole triad
+            </button>
+            <button
+              class="btn"
+              type="button"
+              id="isolate"
+              aria-pressed="false"
+            >
+              Isolate the beating partials
+            </button>
+            <button class="btn" type="button" id="stop-b">Stop</button>
+          </div>
+
+          <p class="status" id="isolate-note">
+            Hearing the whole interval, six harmonics a note.
+          </p>
+
+          <p class="status" id="audio-status">
+            Nothing sounds until you ask it to.
+          </p>
+          <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            Two notes sound in tune when their frequencies stand in a small
+            whole-number ratio, because that is exactly when their harmonics
+            land on top of each other instead of rubbing. Two to one is the
+            octave. Three to two is the fifth — the interval so stable that
+            almost every musical tradition that has ever existed found it
+            without being told.
+          </p>
+          <p>
+            So take the fifth and go. From any note, up a fifth, and again, and
+            again. Twelve fifths passes through every note of the chromatic
+            scale and brings you back to where you began, seven octaves up. That
+            is what the circle of fifths is: a circle.
+          </p>
+          <p>
+            It is not a circle. Twelve fifths is
+            <span class="lit">3¹² / 2¹²</span>, and seven octaves is
+            <span class="lit">2⁷</span>, and those two numbers are not equal.
+            They are not nearly equal by bad luck, and no better instrument or
+            more careful ear will close them. Three to the twelfth is
+            <span class="lit">531441</span>, which is odd. Every power of two is
+            even. An odd number is never an even one, so no number of perfect
+            fifths ever lands on a perfect octave — not twelve, not twelve
+            thousand. The circle of fifths is a spiral that never meets itself,
+            and the amount by which it misses on the twelfth step is
+            <span class="lit">531441 / 524288</span>, about
+            <span class="lit">23.46</span> cents. It has a name. It is the
+            Pythagorean comma, and it is the oldest known bug in music.
+          </p>
+          <p>
+            Twenty-three cents is not a subtlety. A semitone is a hundred, so
+            this is very nearly a quarter of the smallest step on a keyboard —
+            the scale above shows the two side by side. Sound the root against
+            where you arrived and the two notes throb three times a second. That
+            throb is the gap. You are not being told about it; you are listening
+            to it.
+          </p>
+          <p>
+            You cannot fix this, so you choose where to put it. For centuries
+            the answer was to shove the whole error into one interval nobody
+            would play — a single unusable fifth, the <em>wolf</em>, howling in
+            the corner of the keyboard, which is why so much old music stays
+            near C. Equal temperament makes the opposite choice: divide the
+            comma by twelve and give every fifth an equal share of the damage.
+            Each one comes out <span class="lit">1.955</span> cents flat. Twelve
+            of those deficits is the comma, exactly, and the circle closes
+            because it was bent until it did.
+          </p>
+          <p>
+            Pull the dial and hear what that bought. What to listen for is
+            narrower than "does it sound nice", and it is the thing piano tuners
+            actually count. A pure fifth is three-to-two, so the third harmonic
+            of the lower note and the second harmonic of the upper are the
+            <em>same frequency</em> — 660 Hz and 660 Hz — and there is nothing
+            to beat. Detune the fifth and those two partials part company, and
+            the interval starts to throb at the difference between them. That
+            number is the meter. Press <em>Isolate the beating partials</em> and
+            the room takes the rest of the note away, leaving just those two
+            tones so you can count them.
+          </p>
+          <p>
+            The tempered fifth beats about three times in four seconds, which is
+            slow enough that in three hundred years almost nobody has minded.
+            Then listen to the third. Nobody spread the comma across the thirds;
+            the third was the thing that got paid with. It ends up
+            <span class="lit">13.69</span> cents sharp — seven times the damage
+            done to the fifth — and its partials beat
+            <span class="lit">8.73</span> times a second, fast enough to hear as
+            a shimmer rather than a pulse. Once you have heard it against the
+            pure one you will not be able to stop hearing it.
+          </p>
+          <p>
+            Every piano you have ever heard was out of tune. Deliberately,
+            everywhere, in a way that was calculated and agreed and then built
+            into the instrument. It is not a failure of the tuning; it
+            <em>is</em> the tuning. Twelve equal steps is a grid laid over a
+            continuum of ratios, and the grid does not line up with the thing it
+            is laid over — so the notes you get are the grid's notes, near the
+            true ones and not on them. That is the same sentence as room 01,
+            about a different continuum. A tokenizer cuts language into a
+            hundred thousand pieces that language did not ask to be cut into,
+            and <span class="lit">str|aw|berry</span> is where the grid lands
+            rather than where the meaning is. Here the grid is twelve, the
+            continuum is every ratio there is, and the residue has a name and a
+            frequency and a sound.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              The ratios are exact. Every just interval and every step of the
+              wheel is a pair of <code>BigInt</code>s in
+              <code>lib/temperament.js</code>, so the comma is computed as
+              <code>3¹² / 2¹⁹</code> in whole numbers and reduced, not measured
+              and rounded. <code>tools/check-comma.mjs</code> recomputes all
+              eleven figures quoted above from those ratios and fails if any has
+              moved. It runs in CI.
+            </p>
+            <p>
+              Equal temperament is the one part that cannot be exact, and that
+              is the point of it rather than a shortcut here:
+              <code>2^(1/12)</code> is irrational, so no pair of whole numbers
+              describes a tempered semitone. Anything touching it is floating
+              point, which room 09 is about.
+            </p>
+            <p>
+              <strong>The tones are not sine waves, and they cannot be.</strong>
+              A sine wave has no harmonics, and the beating you are listening
+              for lives in the harmonics — a mistuned third beats because the
+              fifth harmonic of the root and the fourth harmonic of the third
+              arrive at slightly different frequencies. Play a badly tuned third
+              on two pure sines and it is perfectly smooth. So each voice here
+              is built from its first six harmonics at
+              <code>1/n</code> amplitude, and the beat rates on the meter are
+              the ones those particular partials produce.
+            </p>
+            <p>
+              Which is also why the isolate button exists, and I put it in after
+              measuring the room rather than before. A whole tempered third is a
+              busy sound: the pair the meter is counting throbs at 8.73 Hz, and
+              a <em>different</em> pair of harmonics — the fourth of the root
+              against the third of the upper note — rubs at about 48 Hz and is
+              louder. The slow beat is genuinely in there and it is genuinely
+              hard to pick out, so a visitor could reasonably press the button,
+              hear a rough noise, and conclude the meter was decorative.
+              Isolate mode sounds only the two partials that the pure ratio
+              would have made coincide. It is not a different claim and nothing
+              is added: those two frequencies are already in the whole tone, at
+              those amplitudes, doing exactly that. The rest of the note is
+              simply taken away.
+            </p>
+            <p>
+              While we are being exact: a pure interval is not
+              <em>silent</em>. Two harmonic tones a just third apart still have
+              fundamentals 55 Hz apart, and that rubbing is just what an
+              interval sounds like. What goes to zero when the tuning is pure is
+              the slow beat specifically, and that is measurable rather than
+              rhetorical — <code>tools/check-comma.mjs</code> synthesises both
+              intervals as arrays of numbers, takes the amplitude envelope, and
+              finds the tempered one's 8.73 Hz component about
+              <em>ninety-nine thousand times</em> stronger than the pure one's.
+              An earlier draft of this wall said a pure interval was
+              "completely still". That was overstated, and the measurement is
+              what caught it.
+            </p>
+            <p>
+              The root is 220 Hz because it had to be something. Beat rates
+              scale with it: the same intervals an octave up beat twice as fast.
+              The meter recomputes rather than quoting the wall.
+            </p>
+            <p>
+              Two simplifications, both mine. The dial interpolates between just
+              and equal <em>in cents</em>, which is the right scale for the ear,
+              but the line it draws is invented — the historical temperaments
+              that sit between these two ends (meantone, and the well
+              temperaments) are not points on it. They made different trades,
+              interval by interval, and several of them are more interesting
+              than a straight line. And "the pure ratios" here are one particular
+              just intonation, the five-limit one, which is a choice among
+              several. Both ends of the dial are real; the path between them is
+              a convenience.
+            </p>
+            <p>
+              Nothing sounds without a click, there is no autoplay, and the
+              transport fades over 120 ms so a stop never clicks. Under
+              <code>prefers-reduced-motion</code> the wheel does not animate and
+              the walk arrives in one step.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../07-byte-pair/index.html">&larr; 07 — Byte-Pair Playback</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../09-gap/index.html">09 — The Gap &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

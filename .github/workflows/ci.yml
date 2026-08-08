@@ -31,6 +31,18 @@ jobs:
       - name: Verify room 07 replays the encoder's own merge loop
         run: node tools/check-bpe.mjs
 
+      - name: Verify room 08's cents, ratios and beat rates
+        run: node tools/check-comma.mjs
+
+      - name: Verify room 09's exact decimal expansions
+        run: node tools/check-gap.mjs
+
+      - name: Verify room 10's constants, convergents and best-approximation claim
+        run: node tools/check-convergents.mjs
+
+      - name: Verify room 11's exhaustive claims about liars
+        run: node tools/check-liars.mjs
+
       - name: Assert no absolute-rooted href/src paths
         run: |
           if grep -rEn '(href|src)=["'"'"']/' --include='*.html' --include='*.js' --include='*.css' .; then

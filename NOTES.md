@@ -289,3 +289,178 @@ to the same power leaves them equal. An earlier draft of the Machinery note clai
 temperature would hold them together for a long way; that was wrong, and testing caught it.
 Opened the dial down to 0, where the chain goes deterministic and all twelve collapse into
 one pane, and rewrote the note around what actually happens.
+
+---
+
+# Wing Two
+
+Added after the first seven rooms were finished. The reason to add anything was that
+Wing One had turned out to be about something more general than it said: a tokenizer is
+a discrete grid laid over a continuous thing, and `str|aw|berry` is the residue. That
+sentence is true of a great many mechanisms which have nothing to do with language, and
+four of them make better exhibits than a further room about tokens would have.
+
+The house rules did not change. Real mechanisms, no network, no build step, a Machinery
+note per room, and every figure on a wall recomputed by a script in CI.
+
+One rule was added: **Wing Two quotes no constant it does not compute.** Room 10 could
+have opened by pasting in a hundred digits of π, and those digits would then have been
+the single unchecked thing the whole room stood on. They come out of Machin's formula
+instead.
+
+---
+
+## Room 08
+
+**The measurement changed the room twice, and that is the main thing worth recording.**
+
+`tools/check-comma.mjs` began as arithmetic — recompute the cents from the ratios,
+compare with the wall. That part passed first time. Then I added a section that
+synthesises the actual tones as arrays of samples and measures the beat rate in the
+result, on the grounds that the room's real claim is that you can *hear* these numbers
+and arithmetic does not check that.
+
+It failed immediately, and both failures were the room's fault rather than the check's.
+
+**First: the sine-wave trap, which I had already avoided and then under-estimated.** I
+knew the voices could not be sine waves, because a mistuned third beats between its
+harmonics and a sine has none. What I had not thought about is that six harmonics gives
+you *several* beating pairs at once. A tempered third at a 220 Hz root beats at 8.73 Hz
+between the fifth harmonic of the root and the fourth of the third — the pair the meter
+names — and simultaneously at about 48 Hz between the fourth and third harmonics, which
+is louder. The slow beat is genuinely in there and genuinely hard to pick out. A visitor
+could press the button, hear a rough noise, and reasonably conclude the meter was
+decorative. Hence the isolate mode, which sounds only the two partials that the pure
+ratio would have made coincide. It adds nothing: those frequencies are already in the
+whole tone at those amplitudes. It takes the rest of the note away.
+
+**Second: the wall was overstating.** It said a pure interval is "completely still".
+It is not. Two harmonic tones a just third apart still have fundamentals 55 Hz apart,
+and that rubbing is simply what an interval sounds like. What goes to zero is the slow
+beat specifically. The check now measures the 8.73 Hz component in both and finds the
+tempered one about ninety-nine thousand times stronger, which is a better sentence than
+"completely still" and has the advantage of being true.
+
+The Hann window on the envelope transform is load-bearing and was not optional. Without
+it the loud 48 Hz component leaks across the whole slow band and the search just reports
+the edge of its own range — which is exactly what it did, for twenty minutes, while I
+looked for a bug in the synthesis.
+
+Everything is exact `BigInt` except equal temperament, which cannot be: `2^(1/12)` is
+irrational, and that is the point of it rather than a shortcut.
+
+---
+
+## Room 09
+
+The easiest room in the wing to get right and the one with the best single number in it.
+A double is `m × 2^e`; when `e` is negative, multiplying top and bottom by `5^-e` turns
+the denominator into a power of ten and the exact decimal falls out. Nothing anywhere in
+`lib/binary64.js` uses floating point to describe floating point.
+
+**The accumulator found a better fact than the one I built it for.** I put the
+ten-tenths ladder in to show error accumulating. It does not accumulate. After five
+additions the total is exactly `0.5` — on the nose, shorter expansion than any line near
+it — and then it comes apart again. That is a much more interesting property than steady
+drift, because it is the reason floating point is genuinely hard rather than merely
+imprecise: you cannot reason about the error by watching it grow. The wall says so now,
+and `check-gap.mjs` pins it.
+
+The round-trip assertion is the one doing real work. Comparing a fifty-five digit string
+against a fifty-five digit string I typed proves that I typed it correctly, which is not
+the interesting question. Asserting `Number(exactDecimal(x)) === x` proves the digits
+describe the number.
+
+**A building-wide bug this room exposed.** `.lit` was `white-space: pre`. Fine for Wing
+One, whose literals are token strings and entry numbers, all short. Room 09 quotes a
+fifty-five digit number in the middle of a sentence, which at 375px is nearly twice the
+width of the screen, and the whole page scrolled sideways. Now `pre-wrap` with
+`overflow-wrap: anywhere` — the wrapping is added rather than the space-preserving taken
+away, because room 01 needs a leading space inside a literal to survive.
+
+Two other overflow bugs, both found by measuring rather than by looking: the tables in
+rooms 08 and 09 needed scroll containers, and then room 08 *still* overflowed by three
+pixels, from an `.sr-only` span. Those are `position: absolute` with no positioned
+ancestor, so they resolve against the viewport and escape the scroller entirely — a
+one-pixel invisible element pushing the page. `.table-wrap` is `position: relative` for
+that reason alone.
+
+---
+
+## Room 10
+
+**The recurrence had its initial conditions swapped and the obvious test did not
+notice.** `h₋₁ = 1, h₋₂ = 0` for numerators, the mirror image for denominators. I had
+them the wrong way round, which produces every fraction upside down — `1/3`, `7/22`,
+`106/333`. The structural check I had written first, that consecutive convergents
+satisfy `|pₖqₖ₋₁ − pₖ₋₁qₖ| = 1`, passed happily, because that identity is symmetric in
+p and q. What caught it was comparing against the four fractions everybody knows.
+
+**And then I measured the wrong quantity entirely.** The plan said φ is the hardest
+number to approximate, and my first check asked which constant needs the biggest
+denominator to reach one part in 10⁸. By that measure φ looks *easy* — it gets there at
+q=6765 where π needs 33102 — because φ's denominators are the Fibonacci numbers and they
+start small. The check failed, and it was right to.
+
+The real measure is quality, `q²·|α − p/q|`: how good a fraction is for the size of its
+denominator. Every irrational has infinitely many convergents below `1/√5`; φ is the
+number where that bound is tight. Its quality settles onto 0.447214 and stays, while π
+dips to 0.003406 at 355/113. So π gets a fraction more than a hundred times better value
+than the best φ will ever be given. That is both the true statement and a much better
+one, and I would not have found it by thinking harder — the failing test found it.
+
+The precision cutoff is the room's one real hazard. A continued fraction taken from a
+truncated decimal describes the constant only until the truncation matters, and after
+that it describes the truncation, with terms that look exactly as plausible. The rule is
+to keep only convergents whose denominator stays well inside a third of the working
+precision, and the check recomputes every convergent shown at 2× and 4× the precision to
+prove not one moves.
+
+The exhaustive search is real, and fast enough to be a button: 112 denominators for
+355/113 in under a millisecond. It is capped at 300,000 in the browser. CI runs it to
+99,532.
+
+---
+
+## Room 11
+
+The only room in the building whose residue is a probability rather than a size, which
+is why it goes last.
+
+**The best thing in it was not planned.** I built it to show that Miller–Rabin catches
+what Fermat misses. It does more than that: when it catches 561 at base 2, the culprit
+is 67, and `67² ≡ 1 (mod 561)` means 561 divides `66 × 68` while dividing neither — so
+`gcd(66, 561) = 33` is a real factor. The witness does not merely convict. It hands you
+a piece of the number. That is now the emotional centre of the room and I found it while
+checking that the culprit really did square to 1.
+
+The three-way sweep is what makes the Carmichael claim land. It is not enough to say
+"318 bases lie". The number that matters is that **zero** bases catch 561 honestly, and
+that the 240 which do report "composite" are the multiples of 3, 11 and 17 — trial
+division wearing the test's clothes. Splitting the sweep three ways rather than two was
+the single best presentation decision in the room.
+
+`BigInt` throughout, and not for size. Modular arithmetic on doubles goes wrong silently
+past 2⁵³ for exactly the reason room 09 is about, and building "a test that is right
+until it isn't" on arithmetic that is right until it isn't would have been funny once.
+
+The Fermat strip showed four identical `1`s in a row and looked broken. They are the
+zero bits of the exponent — square-and-multiply only moves the running total where the
+exponent has a 1 — so the strip now carries the bits underneath the values, and the row
+of digits is 560 in binary, least significant first. A cell that looks like a bug and is
+not needs to say which.
+
+---
+
+## The entrance
+
+Two wings needed a sign apiece, cut by the same tokenizer as everything else.
+`Convergents` comes out as `[Con][ver][g][ents]` — four pieces with a stranded `g` —
+which is a word about approximation that the merge table can barely hold. Nothing was
+arranged to make that happen; it is just what the table does, and it is the kind of thing
+this building exists to notice.
+
+The statement gained three paragraphs naming the through-line, and the sub-heading
+stopped saying "seven rooms".
+
+Wing One is otherwise untouched, apart from room 07 gaining a forward link.
