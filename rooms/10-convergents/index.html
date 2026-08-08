@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>10 — Convergents</title>
+    <meta
+      name="description"
+      content="The best a fraction can do. A ladder of rationals closing on π, overshooting and undershooting forever, and never arriving."
+    />
+    <link rel="stylesheet" href="../../styles/museum.css" />
+    <script>
+      if (location.protocol === 'file:')
+        document.documentElement.classList.add('from-disk');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#exhibit">Skip to the exhibit</a>
+
+    <p class="disk-notice">
+      You have opened this from disk, so the exhibit is not running: browsers
+      refuse to load JavaScript modules from a <code>file://</code> address. The
+      wall text below is all here. To crank the ladder, serve the folder over
+      HTTP — <code>npx http-server</code> in the repo root.
+    </p>
+
+    <div class="page">
+      <header class="sign">
+        <p class="sign-room">Room 10</p>
+        <h1 class="sign-title" data-sign="Convergents">Convergents</h1>
+      </header>
+
+      <main>
+        <section id="exhibit" aria-label="The exhibit">
+          <p class="label" id="pick-label">Choose a number to chase</p>
+          <div class="btn-row" id="pick" aria-labelledby="pick-label"></div>
+
+          <dl class="readout conv-head">
+            <div>
+              <dt>Chasing</dt>
+              <dd class="num" id="n-target">π = 3.14159265358979323846…</dd>
+            </div>
+            <div>
+              <dt>As a continued fraction</dt>
+              <dd class="num" id="n-cf">[3; 7, 15, 1, 292, …]</dd>
+            </div>
+          </dl>
+
+          <p class="label" style="margin: 2.25rem 0 0.7rem">
+            How far off, and which side — each step against the one before
+          </p>
+          <svg
+            class="conv-plot"
+            id="plot"
+            viewBox="0 0 640 240"
+            role="img"
+            aria-labelledby="plot-desc"
+          >
+            <title id="plot-desc">
+              The error of each convergent, on a logarithmic scale, alternating
+              above and below the true value.
+            </title>
+            <g id="plot-body"></g>
+          </svg>
+
+          <div class="btn-row">
+            <button class="btn" type="button" id="next-term">Next convergent</button>
+            <button class="btn" type="button" id="all-terms">All of them</button>
+            <button class="btn" type="button" id="reset">Back to the start</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="conv-table">
+              <caption class="sr-only">
+                The convergents so far, with their error and their quality
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Term</th>
+                  <th scope="col">Fraction</th>
+                  <th scope="col">As a decimal</th>
+                  <th scope="col">Error</th>
+                  <th scope="col">Quality</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <p class="label" style="margin: 2.5rem 0 0.7rem">
+            The claim worth testing
+          </p>
+          <p class="status" id="claim">—</p>
+          <div class="btn-row">
+            <button class="btn" type="button" id="search">
+              Check every smaller denominator
+            </button>
+          </div>
+          <p class="status" id="search-result">
+            Nothing has been checked yet.
+          </p>
+          <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="wall-text">
+          <h2>Wall text</h2>
+          <p>
+            Here is another grid. Take every fraction whose denominator is at
+            most a hundred: there are a few thousand of them, they are spread
+            unevenly along the line, and π is not one of them. It is not one of
+            the ones with denominator at most a million either, or a billion, and
+            that is not a limit of effort — π is irrational, which means it is on
+            none of these grids, ever, and the question is not whether you can
+            land on it but how close you can get and what it costs.
+          </p>
+          <p>
+            There is a best way, and it is mechanical. Take the whole part of
+            your number and set it aside. You are left with something less than
+            one; turn it upside down and do the same again. For π that gives
+            <span class="lit">3</span>, then <span class="lit">7</span>, then
+            <span class="lit">15</span>, then <span class="lit">1</span>, then
+            <span class="lit">292</span>. Stop anywhere and fold the list back up
+            into a fraction and you have a <em>convergent</em> — and it is not
+            merely a good approximation, it is provably the best one available at
+            its size.
+          </p>
+          <p>
+            The first two are old friends.
+            <span class="lit">3</span> is what the Babylonians and the book of
+            Kings used. <span class="lit">22/7</span> is Archimedes, and it is
+            still what most people can recite. The third,
+            <span class="lit">333/106</span>, nobody remembers. The fourth is
+            <span class="lit">355/113</span> — three digits over three digits,
+            easy to remember if you write 113355 and cut it in half — and it is
+            correct to six decimal places. Zu Chongzhi had it in fifth-century
+            China and it was not improved on anywhere in the world for something
+            like nine hundred years.
+          </p>
+          <p>
+            Why is that one so much better than its neighbours? Because of the
+            <span class="lit">292</span>. A large term in the list means the
+            previous convergent had almost nothing left over to correct — you
+            were nearly there already, and the next step has to travel 292 times
+            further to find any improvement at all. Large terms are where the
+            bargains are. The whole reason <span class="lit">355/113</span> is
+            famous is a single unusually large number sitting behind it in a list
+            most people have never seen.
+          </p>
+          <p>
+            Watch the plot as you crank. Every convergent lands on the opposite
+            side of the true value from the one before it — over, under, over,
+            under, without exception — and each is closer than the last. That
+            zigzag is what "converging" actually looks like: not a careful
+            approach from one direction but a series of overshoots, each smaller
+            than the last, closing on something none of them will ever be.
+          </p>
+          <p>
+            And the claim underneath it all is checkable, so check it. When you
+            are on <span class="lit">355/113</span>, there are 112 possible
+            denominators smaller than it and some thousands of fractions using
+            them. Press the button and every single one gets tested. None is
+            closer. Not "none that anyone has found" — none, and the machine
+            will say how many it looked at.
+          </p>
+          <p>
+            Then chase <span class="lit">φ</span>, and watch the bargains stop.
+            Its list is <span class="lit">[1; 1, 1, 1, 1, …]</span>, all ones
+            forever, so there is never a large term and never a convergent that
+            arrives early. Every irrational has fractions that beat
+            <span class="lit">1/√5 q²</span>; φ is the number for which that
+            bound is exactly tight, so it gets the worst deal available to any
+            number at all. π's <span class="lit">355/113</span> is more than a
+            hundred times better value for its denominator than the best fraction
+            φ will ever be given. That is what it means to call φ the most
+            irrational number — not that it is stranger than the others, but
+            that it is the hardest one to nearly be.
+          </p>
+          <p>
+            Rooms 08 and 09 laid a grid over a continuum and showed you the
+            residue. This room asks the next question: given that you must miss,
+            how well can you miss? The answer is a ladder that gets arbitrarily
+            close and never arrives, where each rung is optimal and none is
+            right, and where the interesting quantity turns out not to be the
+            error but the error compared to what the denominator bought you.
+          </p>
+        </section>
+
+        <details class="machinery">
+          <summary>Machinery</summary>
+          <div class="machinery-body">
+            <p>
+              The constants are computed here, not quoted. A room about
+              approximating π should not begin by pasting in a hundred digits of
+              π and asking to be believed — those digits would be the one
+              unchecked thing the rest of it stands on. So π comes from Machin's
+              formula, <code>16 arctan(1/5) − 4 arctan(1/239)</code>, summed in
+              <code>BigInt</code>; e from its factorial series; √2 and φ from an
+              integer square root. <code>tools/check-convergents.mjs</code>
+              checks the first fifty places of each against the known digits.
+            </p>
+            <p>
+              The one real hazard in this room is subtle and worth naming. A
+              continued fraction taken from a <em>truncated</em> decimal is the
+              expansion of the real constant only for as long as the truncation
+              has not yet mattered — after that it silently becomes the
+              expansion of the truncation, producing terms that look exactly as
+              plausible as the true ones and are fiction. So the constants are
+              computed to 120 digits, the ladder is cut off well before the
+              precision could bite, and CI recomputes every convergent shown at
+              double and then quadruple the precision and asserts that not one
+              of them moves.
+            </p>
+            <p>
+              The search really searches. It walks every denominator from 1 up
+              to the current one, takes the nearest numerator to each, and
+              compares the two errors by cross-multiplying exact integers, so
+              nothing rounds anywhere. It stops at the first fraction that beats
+              the convergent, and for a convergent it never finds one. The
+              button is disabled above a denominator of 300,000, which is where
+              the sweep stops being instant; CI runs it up to 99,532.
+            </p>
+            <p>
+              "Quality" in the last column is <code>q²·|α − p/q|</code>. It is
+              there because raw error is a bad way to compare fractions of
+              different sizes — a bigger denominator ought to do better, so the
+              question is whether it did better than its size entitled it to.
+              Below about <code>0.447</code> is a bargain, and that number is
+              <code>1/√5</code>, which is Hurwitz's constant: the best bound
+              that holds for every irrational, tight exactly at φ.
+            </p>
+            <p>
+              I had the wrong measure here at first, and it is a good example of
+              why these notes exist. My first version of the φ claim compared
+              which constant needed the biggest denominator to reach a fixed
+              accuracy — by which φ looks <em>easy</em>, because its
+              denominators are the Fibonacci numbers and they start small. The
+              measurement said the opposite of what I expected, which was
+              correct of it, and the claim on the wall is now about quality
+              rather than size.
+            </p>
+          </div>
+        </details>
+      </main>
+    </div>
+
+    <nav class="floor-nav" aria-label="Rooms">
+      <a href="../09-gap/index.html">&larr; 09 — The Gap</a>
+      <a class="to-plan" href="../../index.html">Floor plan</a>
+      <a href="../11-liars/index.html">11 — Liars &rarr;</a>
+    </nav>
+
+    <script type="module" src="room.js"></script>
+  </body>
+</html>

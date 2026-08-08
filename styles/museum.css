@@ -1928,6 +1928,114 @@ a {
   position: relative;
 }
 
+/* --- room 10: convergents ------------------------------------------------- */
+
+.conv-head {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1.4rem 2rem;
+}
+
+.conv-head dd {
+  font-size: 1rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.conv-plot {
+  width: 100%;
+  height: auto;
+  margin: 0 0 1.25rem;
+  overflow: visible;
+}
+
+/* The true value: the one line in the figure that nothing ever lands on. It is
+   the reading, so it is drawn at full weight — the faint pair above and below
+   are the ruler. */
+.plot-axis {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.plot-grid {
+  stroke: var(--muted);
+  stroke-width: 1;
+  opacity: 0.28;
+}
+
+.plot-line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  opacity: 0.55;
+}
+
+.plot-stem {
+  stroke: var(--muted);
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+.plot-dot {
+  fill: var(--ink);
+}
+
+.plot-dot.is-live {
+  fill: var(--marker);
+}
+
+.plot-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--muted);
+}
+
+.plot-true {
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.conv-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--gutter);
+  margin: 0.5rem 0 1rem;
+  font-size: 0.8125rem;
+}
+
+.conv-table th,
+.conv-table td {
+  padding: 0.5rem 0.65rem;
+  text-align: right;
+  background: var(--paper);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.conv-table thead th {
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.conv-table tr.is-live td,
+.conv-table tr.is-live th {
+  background: var(--marker-wash);
+  color: var(--marker);
+}
+
+/* A fraction that did better than its denominator entitled it to. */
+.conv-table td.is-bargain {
+  background: var(--token-b);
+}
+
+.conv-table tr.is-live td.is-bargain {
+  background: var(--marker-wash-strong);
+}
+
 /* --- narrow --------------------------------------------------------------- */
 /* Readable at 375px. The plan becomes a stack of blocks — still blocks, still
    no rules, still gutters between them. */
